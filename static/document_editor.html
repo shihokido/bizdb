@@ -761,11 +761,7 @@ loadMaster();
 let zoomLevel = 100;
 function changeZoom(delta) {
   zoomLevel = Math.min(150, Math.max(50, zoomLevel + delta));
-  document.querySelector('.paper-outer').style.transform = 'scale(' + zoomLevel/100 + ')';
-  document.querySelector('.paper-outer').style.transformOrigin = 'top center';
-  // スケールに合わせてラッパーの高さを調整
-  const outer = document.querySelector('.paper-outer');
-  outer.style.marginBottom = ((zoomLevel - 100) * 8) + 'px';
+  document.querySelector('.paper-outer').style.zoom = zoomLevel + '%';
   document.getElementById('zoomLabel').textContent = zoomLevel + '%';
 }
 </script>
