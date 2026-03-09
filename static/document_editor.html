@@ -413,7 +413,7 @@ let rows = [];
   const d = new Date();
   document.getElementById('docDate').value =
     d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
-  for (let i=0; i<10; i++) rows.push({name:'',qty:'',unit:'',price:'',note:''});
+  for (let i=0; i<12; i++) rows.push({name:'',qty:'',unit:'',price:'',note:''});
   render(); calc();
   alignLeftCol();
   alignTanto();
