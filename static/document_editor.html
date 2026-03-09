@@ -678,8 +678,7 @@ function exportMasterCSV() {
   loadMaster();
   const header = '品目名,単位,単価,備考';
   const rows = master.map(m => [m.name, m.unit, m.price, m.note].map(v => '"'+(v||'').replace(/"/g,'""')+'"').join(','));
-  const csv = '﻿' + [header, ...rows].join('
-');
+  const csv = '﻿' + [header, ...rows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
