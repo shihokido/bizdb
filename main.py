@@ -394,7 +394,8 @@ def _item_row(i: Item) -> dict:
     }
 
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/", StaticFiles(directory="static", html=True), name="root")
 
 if __name__ == "__main__":
     import uvicorn
