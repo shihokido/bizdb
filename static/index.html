@@ -806,6 +806,7 @@ async function generateEstimate() {
 }
 
 function showEstimate(d, company, client) {
+  currentEstData = d;
   const out = document.getElementById('estOutput');
   out.style.display = 'block';
   const rows = (d.items||[]).map(i =>
@@ -836,10 +837,23 @@ function showEstimate(d, company, client) {
         <div style="font-size:18px;font-weight:700;color:var(--accent);margin-top:6px">合計: ${fmt(d.total_amount)}</div>
       </div>
       ${d.memo ? `<div style="margin-top:14px;padding:10px;background:var(--surface2);border-radius:6px;font-size:12px;color:var(--text2)">${d.memo}</div>` : ''}
-      <div style="margin-top:14px;text-align:center">
+      <div style="margin-top:14px;text-align:center;display:flex;gap:8px;justify-content:center">
         <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 印刷</button>
+        <button class="btn btn-primary btn-sm" onclick="openInEditor(currentEstData)">📄 書類エディタで開く</button>
       </div>
     </div>`;
+}
+
+let currentEstData = null;
+
+function openInEditor(d) {
+  if (!d) return;
+  const params = new URLSearchParams();
+  params.set('client', document.getElementById('estClient').value || '');
+  params.set('items', JSON.stringify((d.items||[]).map(i=>({
+    name: i.name||'', qty: String(i.quantity||''), unit: i.unit||'', price: String(i.unit_price||''), note: i.note||''
+  }))));
+  window.open('/static/document_editor.html?' + params.toString(), '_blank');
 }
 
 // ── DASHBOARD ─────────────────────────────────

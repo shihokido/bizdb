@@ -418,6 +418,20 @@ let rows = [];
   alignLeftCol();
   alignTanto();
   alignFooter();
+  // URLパラメータからデータを読み込む
+  const urlParams = new URLSearchParams(window.location.search);
+  const clientParam = urlParams.get('client');
+  const itemsParam = urlParams.get('items');
+  if (clientParam) document.getElementById('clientName').value = clientParam;
+  if (itemsParam) {
+    try {
+      const imported = JSON.parse(itemsParam);
+      if (imported.length > 0) {
+        rows = imported.map(i => ({name:i.name||'',qty:i.qty||'',unit:i.unit||'',price:i.price||'',note:i.note||''}));
+        render(); calc();
+      }
+    } catch(e) {}
+  }
 })();
 
 function alignFooter() {
