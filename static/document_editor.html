@@ -691,8 +691,7 @@ function importMasterCSV(e) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    const lines = ev.target.result.replace(/^﻿/,'').split('
-').filter(l => l.trim());
+    const lines = ev.target.result.replace(/^﻿/,'').split('\n').filter(l => l.trim());
     const imported = [];
     for (let i = 1; i < lines.length; i++) {
       const cols = lines[i].match(/("(?:[^"]|"")*"|[^,]*)/g).map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"'));
