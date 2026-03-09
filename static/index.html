@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ビジネス書類データベース</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --surface2: #1c2330; --surface3: #21262d;
+  --border: #30363d; --accent: #388bfd; --accent2: #56d364; --yellow: #e3b341;
+  --red: #f85149; --purple: #bc8cff; --orange: #ffa657;
+  --text: #e6edf3; --text2: #8b949e; --text3: #484f58;
+  --font: 'Noto Sans JP', sans-serif; --mono: 'DM Mono', monospace;
+  --r: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+a{color:var(--accent);text-decoration:none}
+
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh}
+.sidebar{width:230px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50}
+.main{margin-left:230px;flex:1;padding:28px;min-height:100vh}
+.page{display:none}.page.active{display:block}
+
+/* SIDEBAR */
+.logo{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.logo-icon{font-size:22px;margin-bottom:4px;display:block}
+.logo-title{font-size:14px;font-weight:700;color:var(--text)}
+.logo-sub{font-size:11px;color:var(--text2)}
+.nav-section{padding:12px 8px 4px;font-size:10px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 12px;
+  color:var(--text2);cursor:pointer;border-radius:6px;margin:1px 6px;
+  font-size:13px;border:none;background:none;width:calc(100% - 12px);text-align:left;transition:all .15s}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:rgba(56,139,253,.15);color:var(--accent);font-weight:500}
+.nav-item .ico{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+
+/* TOPBAR */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:18px;font-weight:700;color:var(--text)}
+.page-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--accent);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-label{color:var(--text2);font-size:11px;margin-top:4px}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px}
+.chart-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:14px;
+  text-transform:uppercase;letter-spacing:.06em}
+.chart-wrap canvas{max-height:220px}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r);
+  padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(56,139,253,.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:32px;margin-bottom:10px;display:block}
+.upload-title{font-size:14px;font-weight:500;margin-bottom:4px}
+.upload-sub{color:var(--text2);font-size:12px}
+.fmt-row{display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.fmt{padding:2px 9px;border:1px solid var(--border);border-radius:999px;
+  font-size:11px;font-family:var(--mono);color:var(--text2)}
+
+/* TYPE SELECTOR */
+.type-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.type-btn{padding:5px 14px;border-radius:999px;border:1px solid var(--border);
+  background:none;color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;
+  font-family:var(--font)}
+.type-btn:hover{border-color:var(--accent);color:var(--accent)}
+.type-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500}
+
+/* STATUS BAR */
+.status-bar{display:none;margin-top:14px;padding:12px 16px;border-radius:6px;
+  font-size:13px;align-items:center;gap:10px}
+.status-bar.show{display:flex}
+.status-bar.loading{background:rgba(56,139,253,.1);border:1px solid rgba(56,139,253,.2);color:var(--accent)}
+.status-bar.success{background:rgba(86,211,100,.1);border:1px solid rgba(86,211,100,.2);color:var(--accent2)}
+.status-bar.error{background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2);color:var(--red)}
+.spinner{width:15px;height:15px;border:2px solid currentColor;border-top-color:transparent;
+  border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:8px 12px;color:var(--text);font-family:var(--font);font-size:13px;outline:none}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--accent)}
+.filter-bar input{flex:1;min-width:160px}
+
+/* TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;font-size:11px;font-weight:500;
+  color:var(--text2);text-transform:uppercase;letter-spacing:.06em;
+  border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border);
+  font-size:13px;color:var(--text);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.02);cursor:pointer}
+.empty-row td{text-align:center;padding:36px;color:var(--text3)}
+
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
+.badge-見積書{background:rgba(56,139,253,.15);color:var(--accent)}
+.badge-請求書{background:rgba(255,166,87,.15);color:var(--orange)}
+.badge-納品書{background:rgba(86,211,100,.15);color:var(--accent2)}
+.badge-発注書{background:rgba(188,140,255,.15);color:var(--purple)}
+.badge-領収書{background:rgba(227,179,65,.15);color:var(--yellow)}
+.badge-未処理{background:rgba(139,148,158,.1);color:var(--text2)}
+.badge-処理済{background:rgba(86,211,100,.12);color:var(--accent2)}
+.badge-キャンセル{background:rgba(248,81,73,.1);color:var(--red)}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:6px;border:none;font-family:var(--font);
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;
+  display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#1f6feb}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface3)}
+.btn-danger{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.2)}
+.btn-danger:hover{background:rgba(248,81,73,.2)}
+.btn-green{background:rgba(86,211,100,.12);color:var(--accent2);border:1px solid rgba(86,211,100,.2)}
+.btn-green:hover{background:rgba(86,211,100,.2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+
+/* MONO / AMOUNT */
+.mono{font-family:var(--mono)}
+.amount{font-family:var(--mono);color:var(--accent)}
+.amount-warn{font-family:var(--mono);color:var(--red)}
+.amount-ok{font-family:var(--mono);color:var(--accent2)}
+.muted{color:var(--text2)}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:200;align-items:center;justify-content:center;padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:24px;width:100%;max-width:800px;max-height:88vh;overflow-y:auto}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:0 4px}
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.meta-item .meta-label{font-size:11px;color:var(--text2);margin-bottom:2px}
+.meta-item .meta-value{font-size:13px;font-weight:500}
+.market-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
+  border-radius:999px;font-size:11px}
+.market-ok{background:rgba(86,211,100,.12);color:var(--accent2)}
+.market-high{background:rgba(248,81,73,.1);color:var(--red)}
+.market-low{background:rgba(56,139,253,.1);color:var(--accent)}
+
+/* ESTIMATE BUILDER */
+.est-items-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.est-item-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center}
+.est-item-row input{background:var(--surface2);border:1px solid var(--border);
+  border-radius:5px;padding:7px 10px;color:var(--text);font-family:var(--font);
+  font-size:13px;outline:none;width:100%}
+.est-item-row input:focus{border-color:var(--accent)}
+
+/* INPUT */
+.input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:9px 12px;color:var(--text);font-family:var(--font);font-size:13px;
+  outline:none;width:100%}
+.input:focus{border-color:var(--accent)}
+textarea.input{resize:vertical;min-height:70px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block}
+
+/* CLIENT CARD */
+.client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.client-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;cursor:pointer;transition:border-color .15s}
+.client-card:hover{border-color:var(--accent)}
+.client-name{font-weight:600;font-size:14px;margin-bottom:8px}
+.client-stats{display:flex;gap:12px}
+.client-stat{font-size:12px;color:var(--text2)}
+.client-stat span{color:var(--text);font-weight:500}
+
+/* RESULT PREVIEW */
+.result-preview{background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px;margin-top:14px}
+.est-output{background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;font-size:13px;line-height:1.8;
+  white-space:pre-wrap;font-family:var(--font)}
+
+@media(max-width:900px){
+  .sidebar{width:54px}.sidebar .logo-title,.sidebar .logo-sub,.nav-item span,.nav-section{display:none}
+  .main{margin-left:54px;padding:16px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .charts-grid{grid-template-columns:1fr}
+  .meta-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="logo">
+    <span class="logo-icon">📂</span>
+    <div class="logo-title">書類データベース</div>
+    <div class="logo-sub">Business Docs DB</div>
+  </div>
+  <div class="nav-section">メイン</div>
+  <button class="nav-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span><span>ダッシュボード</span></button>
+  <button class="nav-item" onclick="nav('upload',this)"><span class="ico">⬆️</span><span>アップロード</span></button>
+  <button class="nav-item" onclick="nav('documents',this)"><span class="ico">📋</span><span>書類一覧</span></button>
+  <button class="nav-item" onclick="nav('search',this)"><span class="ico">🔍</span><span>品目検索</span></button>
+  <div class="nav-section">分析</div>
+  <button class="nav-item" onclick="nav('clients',this)"><span class="ico">🏢</span><span>取引先分析</span></button>
+  <button class="nav-item" onclick="nav('market',this)"><span class="ico">📈</span><span>相場検索</span></button>
+  <div class="nav-section">作成</div>
+  <button class="nav-item" onclick="nav('estimate',this)"><span class="ico">✏️</span><span>見積書作成</span></button>
+  <div style="flex:1"></div>
+  <div style="padding:12px 6px;border-top:1px solid var(--border)">
+    <button class="nav-item" onclick="exportCSV()"><span class="ico">📥</span><span>CSVエクスポート</span></button>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+<!-- ダッシュボード -->
+<div id="page-dashboard" class="page active">
+  <div class="page-header">
+    <div><div class="page-title">ダッシュボード</div><div class="page-sub">全書類の集計・トレンド</div></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num" id="st-docs">—</div><div class="stat-label">総書類数</div></div>
+    <div class="stat"><div class="stat-num" id="st-items">—</div><div class="stat-label">総品目数</div></div>
+    <div class="stat"><div class="stat-num" id="st-amount">—</div><div class="stat-label">総取引金額</div></div>
+    <div class="stat"><div class="stat-num" id="st-clients">—</div><div class="stat-label">取引先数</div></div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">月別取引金額推移</div>
+      <canvas id="chart-monthly"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">書類種別の割合</div>
+      <canvas id="chart-types"></canvas>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">取引先 TOP10（金額）</div>
+      <canvas id="chart-clients"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">よく出る品目 TOP10</div>
+      <canvas id="chart-items"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- アップロード -->
+<div id="page-upload" class="page">
+  <div class="page-header">
+    <div><div class="page-title">書類をアップロード</div><div class="page-sub">AI が種別・品目・金額を自動抽出します</div></div>
+  </div>
+  <div class="card">
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.docx,.jpg,.jpeg,.png,.webp" onchange="handleUpload(this.files[0])">
+      <span class="upload-icon">📁</span>
+      <div class="upload-title">クリックまたはドラッグ＆ドロップ</div>
+      <div class="upload-sub">Claude AI が書類の種類を自動判別して品目・金額を抽出します</div>
+      <div class="fmt-row">
+        <span class="fmt">PDF</span><span class="fmt">XLSX</span><span class="fmt">DOCX</span>
+        <span class="fmt">JPG</span><span class="fmt">PNG</span>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:6px">書類種別（自動判別 または 手動指定）</div>
+      <div class="type-row">
+        <button class="type-btn active" onclick="setDocType('auto',this)">🤖 自動判別</button>
+        <button class="type-btn" onclick="setDocType('見積書',this)">見積書</button>
+        <button class="type-btn" onclick="setDocType('請求書',this)">請求書</button>
+        <button class="type-btn" onclick="setDocType('納品書',this)">納品書</button>
+        <button class="type-btn" onclick="setDocType('発注書',this)">発注書</button>
+        <button class="type-btn" onclick="setDocType('領収書',this)">領収書</button>
+      </div>
+    </div>
+    <div class="status-bar" id="uploadStatus">
+      <div class="spinner" id="uploadSpinner"></div>
+      <span id="uploadMsg"></span>
+    </div>
+  </div>
+  <div id="uploadResult" style="display:none"></div>
+</div>
+
+<!-- 書類一覧 -->
+<div id="page-documents" class="page">
+  <div class="page-header">
+    <div><div class="page-title">書類一覧</div><div class="page-sub">すべての書類を検索・管理</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">📥 CSV</button>
+  </div>
+  <div class="card">
+    <div class="filter-bar">
+      <select id="filterType" onchange="loadDocuments()">
+        <option value="">すべての種別</option>
+        <option>見積書</option><option>請求書</option><option>納品書</option>
+        <option>発注書</option><option>領収書</option>
+      </select>
+      <select id="filterStatus" onchange="loadDocuments()">
+        <option value="">すべてのステータス</option>
+        <option>未処理</option><option>処理済</option><option>キャンセル</option>
+      </select>
+      <input type="text" id="filterClient" placeholder="取引先で絞り込み..." oninput="loadDocuments()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>種別</th><th>書類番号</th><th>取引先</th><th>日付</th>
+          <th>期限/納期</th><th>合計金額</th><th>品目数</th><th>ステータス</th><th>操作</th>
+        </tr></thead>
+        <tbody id="docsList"><tr class="empty-row"><td colspan="9">読み込み中...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 品目検索 -->
+<div id="page-search" class="page">
+  <div class="page-header">
+    <div><div class="page-title">品目を検索</div><div class="page-sub">全書類の品目・サービスを横断検索</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="exportItemsCSV()">📥 品目CSV</button>
+  </div>
+  <div class="card">
+    <div class="filter-bar">
+      <input class="input" id="searchQ" placeholder="品目名・サービス名で検索..." style="flex:1" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="btn btn-primary" onclick="doSearch()">🔍 検索</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>品目名</th><th>数量</th><th>単価</th><th>合計</th>
+          <th>相場</th><th>種別</th><th>取引先</th><th>日付</th><th>相場調査</th>
+        </tr></thead>
+        <tbody id="searchResults"><tr class="empty-row"><td colspan="9">キーワードを入力してください</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 取引先分析 -->
+<div id="page-clients" class="page">
+  <div class="page-header">
+    <div><div class="page-title">取引先分析</div><div class="page-sub">取引先ごとの実績・書類一覧</div></div>
+  </div>
+  <div class="client-grid" id="clientGrid"></div>
+</div>
+
+<!-- 相場検索 -->
+<div id="page-market" class="page">
+  <div class="page-header">
+    <div><div class="page-title">相場価格を調べる</div><div class="page-sub">品目名を入力するとAIが日本市場の相場を推定します</div></div>
+  </div>
+  <div class="card">
+    <div class="filter-bar">
+      <input class="input" id="marketQ" placeholder="例: Webデザイン費、サーバ構築、ノートPC..." style="flex:1" onkeydown="if(event.key==='Enter')doMarket()">
+      <button class="btn btn-primary" onclick="doMarket()">📈 相場を調べる</button>
+    </div>
+    <div id="marketStatus" class="status-bar"><div class="spinner"></div><span>調査中...</span></div>
+    <div id="marketResult" style="display:none"></div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div class="card-title">💡 相場検索について</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.8">
+        AIの知識をもとに日本市場の一般的な相場を推定します。あくまで参考値であり、実際の価格は時期・地域・仕様によって異なります。<br>
+        書類一覧の品目行から「相場調査」ボタンを押すと、その品目の相場を即座に調べることができます。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 見積書作成 -->
+<div id="page-estimate" class="page">
+  <div class="page-header">
+    <div><div class="page-title">見積書を作成</div><div class="page-sub">品目を入力するとAIが見積書を自動生成します</div></div>
+  </div>
+  <div class="card">
+    <div class="form-grid">
+      <div>
+        <label class="form-label">貴社名（発行会社）</label>
+        <input class="input" id="estCompany" placeholder="株式会社〇〇">
+      </div>
+      <div>
+        <label class="form-label">取引先名</label>
+        <input class="input" id="estClient" placeholder="〇〇株式会社 御中">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="form-label">品目リスト</label>
+      <div class="est-items-list" id="estItemsList"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addEstItem()">＋ 品目を追加</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="form-label">備考・条件</label>
+      <textarea class="input" id="estMemo" placeholder="支払条件、納期、特記事項など..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="generateEstimate()">✨ プレビューで確認</button>
+      <button class="btn btn-green" onclick="downloadExcel('見積書')">📥 見積書Excel出力</button>
+      <button class="btn btn-ghost" onclick="downloadExcel('請求書')">📥 請求書Excel出力</button>
+    </div>
+    <div id="estStatus" class="status-bar"><div class="spinner"></div><span>生成中...</span></div>
+  </div>
+  <div id="estOutput" style="display:none"></div>
+</div>
+
+</main>
+</div>
+
+<!-- ── 書類詳細モーダル ── -->
+<div class="overlay" id="docModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">書類詳細</div>
+        <div id="modalBadge" style="margin-top:4px"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="meta-grid" id="modalMeta"></div>
+    <div style="margin-bottom:14px">
+      <div class="card-title">ステータス</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-ghost" onclick="setStatus('未処理')">未処理</button>
+        <button class="btn btn-sm btn-green" onclick="setStatus('処理済')">処理済</button>
+        <button class="btn btn-sm btn-danger" onclick="setStatus('キャンセル')">キャンセル</button>
+      </div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div class="card-title">品目一覧</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>品目名</th><th>数量</th><th>単価</th><th>合計</th><th>相場</th><th>備考</th></tr></thead>
+          <tbody id="modalItems"></tbody>
+        </table>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="card-title">メモ</div>
+      <textarea class="input" id="modalMemo" rows="3" placeholder="メモを追加..."></textarea>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="saveMemo()">💾 保存</button>
+    </div>
+    <div style="text-align:right">
+      <button class="btn btn-danger btn-sm" onclick="deleteDoc()">🗑 削除</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────
+let selectedDocType = 'auto';
+let currentDocId = null;
+let charts = {};
+let estItems = [];
+
+// ── NAV ───────────────────────────────────────
+function nav(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (page === 'dashboard') loadDashboard();
+  if (page === 'documents') loadDocuments();
+  if (page === 'clients') loadClients();
+  if (page === 'estimate' && estItems.length === 0) { estItems = [{}]; renderEstItems(); }
+}
+
+// ── FORMAT ────────────────────────────────────
+const fmt  = n => (n != null && n !== 0) ? '¥' + Number(n).toLocaleString() : '—';
+const dash = v => v || '—';
+const fmtK = n => n >= 1e8 ? (n/1e8).toFixed(1)+'億' : n >= 1e4 ? (n/1e4).toFixed(1)+'万' : fmt(n);
+
+// ── UPLOAD ────────────────────────────────────
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); handleUpload(e.dataTransfer.files[0]); });
+
+function setDocType(t, btn) {
+  selectedDocType = t;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function handleUpload(file) {
+  if (!file) return;
+  setUploadStatus('loading', `⏳ "${file.name}" を解析中...`);
+  document.getElementById('uploadResult').style.display = 'none';
+  const fd = new FormData();
+  fd.append('file', file);
+  try {
+    const res = await fetch(`/api/upload?doc_type=${encodeURIComponent(selectedDocType)}`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'エラー');
+    setUploadStatus('success', `✅ ${data.doc_type}として抽出完了 — ${data.items_count}品目 / 合計${fmt(data.total_amount)}`);
+    showUploadResult(data);
+  } catch(e) {
+    setUploadStatus('error', '❌ ' + e.message);
+  }
+  document.getElementById('fileInput').value = '';
+}
+
+function setUploadStatus(type, msg) {
+  const bar = document.getElementById('uploadStatus');
+  bar.className = 'status-bar show ' + type;
+  document.getElementById('uploadMsg').textContent = msg;
+  document.getElementById('uploadSpinner').style.display = type === 'loading' ? 'block' : 'none';
+}
+
+async function showUploadResult(data) {
+  const detail = await fetch(`/api/documents/${data.id}`).then(r => r.json());
+  const div = document.getElementById('uploadResult');
+  div.style.display = 'block';
+  div.innerHTML = `
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span class="badge badge-${detail.doc_type}">${detail.doc_type}</span>
+        <span style="font-weight:600">${detail.filename}</span>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-item"><div class="meta-label">取引先</div><div class="meta-value">${dash(detail.client_name)}</div></div>
+        <div class="meta-item"><div class="meta-label">書類番号</div><div class="meta-value">${dash(detail.doc_number)}</div></div>
+        <div class="meta-item"><div class="meta-label">日付</div><div class="meta-value">${dash(detail.doc_date)}</div></div>
+        <div class="meta-item"><div class="meta-label">合計金額</div><div class="meta-value amount">${fmt(detail.total_amount)}</div></div>
+        <div class="meta-item"><div class="meta-label">消費税</div><div class="meta-value">${fmt(detail.tax_amount)}</div></div>
+        <div class="meta-item"><div class="meta-label">支払期限/納期</div><div class="meta-value">${dash(detail.due_date)}</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>品目名</th><th>数量</th><th>単位</th><th>単価</th><th>合計</th><th>備考</th></tr></thead>
+          <tbody>${renderItemRows(detail.items)}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ── DOCUMENTS ─────────────────────────────────
+async function loadDocuments() {
+  const type   = document.getElementById('filterType').value;
+  const status = document.getElementById('filterStatus').value;
+  const client = document.getElementById('filterClient').value;
+  const params = new URLSearchParams();
+  if (type)   params.set('doc_type', type);
+  if (status) params.set('status', status);
+  if (client) params.set('client', client);
+  const docs = await fetch('/api/documents?' + params).then(r => r.json());
+  const tbody = document.getElementById('docsList');
+  if (!docs.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="9">書類がありません</td></tr>'; return;
+  }
+  tbody.innerHTML = docs.map(d => `
+    <tr onclick="openDoc(${d.id})">
+      <td><span class="badge badge-${d.doc_type}">${d.doc_type}</span></td>
+      <td class="mono muted" style="font-size:12px">${dash(d.doc_number)}</td>
+      <td>${dash(d.client_name)}</td>
+      <td class="mono muted">${dash(d.doc_date)}</td>
+      <td class="mono muted">${dash(d.due_date)}</td>
+      <td class="amount">${fmt(d.total_amount)}</td>
+      <td><span class="badge badge-見積書" style="background:rgba(139,148,158,.1);color:var(--text2)">${d.items_count}品目</span></td>
+      <td><span class="badge badge-${d.status}">${d.status}</span></td>
+      <td onclick="event.stopPropagation()" style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-green btn-sm" onclick="dlExcel(${d.id})" title="Excelで出力">📥 Excel</button>
+        <button class="btn btn-danger btn-sm" onclick="delDoc(${d.id},this)">削除</button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── DETAIL MODAL ──────────────────────────────
+async function openDoc(id) {
+  currentDocId = id;
+  const d = await fetch(`/api/documents/${id}`).then(r => r.json());
+  document.getElementById('modalTitle').textContent = '📄 ' + d.filename;
+  document.getElementById('modalBadge').innerHTML = `<span class="badge badge-${d.doc_type}">${d.doc_type}</span>`;
+  document.getElementById('modalMeta').innerHTML = `
+    <div class="meta-item"><div class="meta-label">取引先</div><div class="meta-value">${dash(d.client_name)}</div></div>
+    <div class="meta-item"><div class="meta-label">書類番号</div><div class="meta-value">${dash(d.doc_number)}</div></div>
+    <div class="meta-item"><div class="meta-label">書類日付</div><div class="meta-value">${dash(d.doc_date)}</div></div>
+    <div class="meta-item"><div class="meta-label">合計金額</div><div class="meta-value amount">${fmt(d.total_amount)}</div></div>
+    <div class="meta-item"><div class="meta-label">消費税</div><div class="meta-value">${fmt(d.tax_amount)}</div></div>
+    <div class="meta-item"><div class="meta-label">支払期限/納期</div><div class="meta-value">${dash(d.due_date)}</div></div>`;
+  document.getElementById('modalItems').innerHTML = renderItemRowsFull(d.items);
+  document.getElementById('modalMemo').value = d.memo || '';
+  document.getElementById('docModal').classList.add('open');
+}
+
+function renderItemRowsFull(items) {
+  if (!items || !items.length) return '<tr class="empty-row"><td colspan="6">品目なし</td></tr>';
+  return items.map(i => {
+    let marketHtml = '<span class="muted" style="font-size:11px">—</span>';
+    if (i.market_low || i.market_high) {
+      const ratio = i.unit_price && i.market_high ? i.unit_price / i.market_high : null;
+      const cls = ratio ? (ratio > 1.1 ? 'market-high' : (ratio < 0.9 ? 'market-low' : 'market-ok')) : 'market-ok';
+      const icon = ratio ? (ratio > 1.1 ? '↑高' : (ratio < 0.9 ? '↓安' : '✓適正')) : '';
+      marketHtml = `<span class="market-badge ${cls}">${icon} ${fmt(i.market_low)}〜${fmt(i.market_high)}</span>`;
+    }
+    return `<tr>
+      <td>${i.name}</td>
+      <td class="mono">${i.quantity}${i.unit}</td>
+      <td class="amount">${fmt(i.unit_price)}</td>
+      <td class="amount">${fmt(i.total_price)}</td>
+      <td>${marketHtml}</td>
+      <td class="muted" style="font-size:12px">${i.note || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderItemRows(items) {
+  if (!items || !items.length) return '<tr class="empty-row"><td colspan="6">品目なし</td></tr>';
+  return items.map(i => `<tr>
+    <td>${i.name}</td><td class="mono">${i.quantity}${i.unit||''}</td>
+    <td class="amount">${fmt(i.unit_price)}</td><td class="amount">${fmt(i.total_price)}</td>
+    <td class="muted" style="font-size:12px">${i.note||'—'}</td>
+  </tr>`).join('');
+}
+
+function closeModal() { document.getElementById('docModal').classList.remove('open'); }
+document.getElementById('docModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+async function setStatus(status) {
+  if (!currentDocId) return;
+  await fetch(`/api/documents/${currentDocId}/status`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({status})
+  });
+  closeModal(); loadDocuments();
+}
+
+async function saveMemo() {
+  if (!currentDocId) return;
+  const memo = document.getElementById('modalMemo').value;
+  await fetch(`/api/documents/${currentDocId}/memo`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({memo})
+  });
+}
+
+async function deleteDoc() {
+  if (!currentDocId || !confirm('この書類を削除しますか？')) return;
+  await fetch(`/api/documents/${currentDocId}`, {method:'DELETE'});
+  closeModal(); loadDocuments();
+}
+
+async function delDoc(id, btn) {
+  if (!confirm('削除しますか？')) return;
+  btn.disabled = true;
+  await fetch(`/api/documents/${id}`, {method:'DELETE'});
+  loadDocuments();
+}
+
+// ── SEARCH ────────────────────────────────────
+async function doSearch() {
+  const q = document.getElementById('searchQ').value.trim();
+  if (!q) return;
+  const items = await fetch(`/api/search?q=${encodeURIComponent(q)}`).then(r => r.json());
+  const tbody = document.getElementById('searchResults');
+  if (!items.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="9">「${q}」に一致する品目はありません</td></tr>`; return;
+  }
+  tbody.innerHTML = items.map(i => {
+    let market = '—';
+    if (i.market_low || i.market_high) market = `${fmt(i.market_low)}〜${fmt(i.market_high)}`;
+    return `<tr>
+      <td>${i.name}</td>
+      <td class="mono">${i.quantity}${i.unit||''}</td>
+      <td class="amount">${fmt(i.unit_price)}</td>
+      <td class="amount">${fmt(i.total_price)}</td>
+      <td style="font-size:12px;color:var(--text2)">${market}</td>
+      <td><span class="badge badge-${i.doc_type}">${i.doc_type}</span></td>
+      <td class="muted">${dash(i.client_name)}</td>
+      <td class="mono muted">${dash(i.doc_date)}</td>
+      <td><button class="btn btn-sm btn-ghost" onclick="searchMarket('${i.name.replace(/'/g,"\\'")}',${i.item_id})">📈</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── CLIENTS ───────────────────────────────────
+async function loadClients() {
+  const clients = await fetch('/api/clients').then(r => r.json());
+  const grid = document.getElementById('clientGrid');
+  if (!clients.length) { grid.innerHTML = '<div class="muted">取引先データがありません</div>'; return; }
+  grid.innerHTML = clients.map(c => `
+    <div class="client-card" onclick="showClientDocs('${c.name.replace(/'/g,"\\'")}')">
+      <div class="client-name">🏢 ${c.name}</div>
+      <div class="client-stats">
+        <div class="client-stat">件数 <span>${c.count}</span></div>
+        <div class="client-stat">合計 <span>${fmtK(c.total)}</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">最終取引: ${c.last_date || '—'}</div>
+    </div>`).join('');
+}
+
+async function showClientDocs(name) {
+  const docs = await fetch(`/api/clients/${encodeURIComponent(name)}/documents`).then(r => r.json());
+  // 書類一覧ページへ遷移してフィルタ
+  nav('documents', document.querySelectorAll('.nav-item')[3]);
+  document.getElementById('filterClient').value = name;
+  await loadDocuments();
+}
+
+// ── MARKET PRICE ──────────────────────────────
+async function doMarket() {
+  const q = document.getElementById('marketQ').value.trim();
+  if (!q) return;
+  searchMarket(q, null, 'page');
+}
+
+async function searchMarket(itemName, itemId, mode = 'modal') {
+  if (mode === 'page') {
+    const status = document.getElementById('marketStatus');
+    status.className = 'status-bar show loading';
+    document.getElementById('marketResult').style.display = 'none';
+  }
+  try {
+    const res = await fetch('/api/market-price', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({item_name: itemName, item_id: itemId})
+    });
+    const data = await res.json();
+    if (mode === 'page') {
+      document.getElementById('marketStatus').className = 'status-bar';
+      const r = document.getElementById('marketResult');
+      r.style.display = 'block';
+      const rel = data.reliability === 'high' ? '🟢 高' : data.reliability === 'medium' ? '🟡 中' : '🔴 低';
+      r.innerHTML = `
+        <div class="card" style="margin-top:14px">
+          <div style="font-size:16px;font-weight:700;margin-bottom:14px">📊 「${itemName}」の相場</div>
+          <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="stat"><div class="stat-num">${fmt(data.market_low)}</div><div class="stat-label">相場 下限</div></div>
+            <div class="stat"><div class="stat-num">${fmt(data.market_high)}</div><div class="stat-label">相場 上限</div></div>
+            <div class="stat"><div class="stat-num" style="font-size:18px">${rel}</div><div class="stat-label">信頼度</div></div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:6px;font-size:13px;color:var(--text2)">
+            <strong style="color:var(--text)">単位：</strong>${data.unit || '—'}<br>
+            <strong style="color:var(--text)">備考：</strong>${data.memo || '—'}
+          </div>
+        </div>`;
+    } else {
+      // 検索ページでの結果は行を更新
+      await doSearch();
+    }
+  } catch(e) {
+    if (mode === 'page') document.getElementById('marketStatus').className = 'status-bar';
+  }
+}
+
+// ── ESTIMATE BUILDER ──────────────────────────
+function renderEstItems() {
+  const list = document.getElementById('estItemsList');
+  list.innerHTML = estItems.map((it, i) => `
+    <div class="est-item-row">
+      <input class="input" placeholder="品目名・サービス名" value="${it.name||''}" oninput="estItems[${i}].name=this.value">
+      <input class="input" placeholder="数量" type="number" value="${it.quantity||''}" oninput="estItems[${i}].quantity=this.value">
+      <input class="input" placeholder="単位（個/式）" value="${it.unit||''}" oninput="estItems[${i}].unit=this.value">
+      <input class="input" placeholder="単価（円）" type="number" value="${it.unit_price||''}" oninput="estItems[${i}].unit_price=this.value">
+      <button class="btn btn-danger btn-sm" onclick="removeEstItem(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addEstItem() { estItems.push({}); renderEstItems(); }
+function removeEstItem(i) { estItems.splice(i,1); renderEstItems(); }
+
+async function generateEstimate() {
+  const company = document.getElementById('estCompany').value.trim();
+  const client  = document.getElementById('estClient').value.trim();
+  const memo    = document.getElementById('estMemo').value.trim();
+  if (!client || !estItems.length) {
+    alert('取引先と品目を入力してください'); return;
+  }
+  const status = document.getElementById('estStatus');
+  status.className = 'status-bar show loading';
+  document.getElementById('estOutput').style.display = 'none';
+  try {
+    const res = await fetch('/api/generate-estimate', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({client_name: client, company_name: company, memo, items: estItems})
+    });
+    const data = await res.json();
+    status.className = 'status-bar';
+    showEstimate(data, company, client);
+  } catch(e) {
+    status.className = 'status-bar';
+    alert('生成エラー: ' + e.message);
+  }
+}
+
+function showEstimate(d, company, client) {
+  const out = document.getElementById('estOutput');
+  out.style.display = 'block';
+  const rows = (d.items||[]).map(i =>
+    `<tr><td>${i.name}</td><td class="mono">${i.quantity}${i.unit||''}</td><td class="amount">${fmt(i.unit_price)}</td><td class="amount">${fmt(i.total_price)}</td><td class="muted">${i.note||''}</td></tr>`
+  ).join('');
+  out.innerHTML = `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+        <div>
+          <div style="font-size:20px;font-weight:700;margin-bottom:4px">御見積書</div>
+          <div style="font-size:12px;color:var(--text2)">見積番号: ${d.doc_number||'—'} ／ 有効期限: ${d.due_date||'—'}</div>
+        </div>
+        <div style="text-align:right;font-size:13px;color:var(--text2)">
+          <div>発行日: ${d.doc_date||'—'}</div>
+          <div style="font-weight:600;color:var(--text);margin-top:4px">${company||'（貴社名）'}</div>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;font-size:14px">${client} 御中</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>品目</th><th>数量</th><th>単価</th><th>小計</th><th>備考</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div style="text-align:right;margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
+        <div style="font-size:13px;color:var(--text2)">小計: ${fmt(d.subtotal)}</div>
+        <div style="font-size:13px;color:var(--text2)">消費税(10%): ${fmt(d.tax_amount)}</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent);margin-top:6px">合計: ${fmt(d.total_amount)}</div>
+      </div>
+      ${d.memo ? `<div style="margin-top:14px;padding:10px;background:var(--surface2);border-radius:6px;font-size:12px;color:var(--text2)">${d.memo}</div>` : ''}
+      <div style="margin-top:14px;text-align:center">
+        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 印刷</button>
+      </div>
+    </div>`;
+}
+
+// ── DASHBOARD ─────────────────────────────────
+async function loadDashboard() {
+  const s = await fetch('/api/stats').then(r => r.json());
+  const clients = await fetch('/api/clients').then(r => r.json());
+
+  document.getElementById('st-docs').textContent    = s.total_docs;
+  document.getElementById('st-items').textContent   = s.total_items;
+  document.getElementById('st-amount').textContent  = fmtK(s.total_amount);
+  document.getElementById('st-clients').textContent = clients.length;
+
+  const colors = {
+    '見積書':'rgba(56,139,253,.8)', '請求書':'rgba(255,166,87,.8)',
+    '納品書':'rgba(86,211,100,.8)', '発注書':'rgba(188,140,255,.8)', '領収書':'rgba(227,179,65,.8)'
+  };
+
+  // 月別グラフ
+  destroyChart('monthly');
+  charts.monthly = new Chart(document.getElementById('chart-monthly'), {
+    type: 'bar',
+    data: {
+      labels: s.monthly.map(m => m.month),
+      datasets: [{
+        label: '金額', data: s.monthly.map(m => m.amount),
+        backgroundColor: 'rgba(56,139,253,.6)', borderColor: 'rgba(56,139,253,1)', borderWidth: 1, borderRadius: 4
+      }]
+    },
+    options: chartOpts('¥', true)
+  });
+
+  // 書類種別ドーナツ
+  destroyChart('types');
+  charts.types = new Chart(document.getElementById('chart-types'), {
+    type: 'doughnut',
+    data: {
+      labels: s.by_type.map(b => b.type),
+      datasets: [{ data: s.by_type.map(b => b.count),
+        backgroundColor: s.by_type.map(b => colors[b.type] || 'rgba(139,148,158,.6)'),
+        borderWidth: 0 }]
+    },
+    options: { ...chartOpts(), plugins: { legend: { position: 'bottom', labels: { color: '#8b949e', font: { size: 11 } } } } }
+  });
+
+  // 取引先横棒
+  destroyChart('clients');
+  charts.clients = new Chart(document.getElementById('chart-clients'), {
+    type: 'bar',
+    data: {
+      labels: s.clients.map(c => c.name),
+      datasets: [{ label: '金額', data: s.clients.map(c => c.amount),
+        backgroundColor: 'rgba(188,140,255,.6)', borderColor: 'rgba(188,140,255,1)',
+        borderWidth: 1, borderRadius: 4 }]
+    },
+    options: { ...chartOpts('¥', true), indexAxis: 'y' }
+  });
+
+  // 品目 TOP10 横棒
+  destroyChart('items');
+  charts.items = new Chart(document.getElementById('chart-items'), {
+    type: 'bar',
+    data: {
+      labels: s.top_items.map(i => i.name.length > 12 ? i.name.slice(0,12)+'…' : i.name),
+      datasets: [{ label: '件数', data: s.top_items.map(i => i.count),
+        backgroundColor: 'rgba(86,211,100,.6)', borderColor: 'rgba(86,211,100,1)',
+        borderWidth: 1, borderRadius: 4 }]
+    },
+    options: { ...chartOpts('件', false), indexAxis: 'y' }
+  });
+}
+
+function destroyChart(key) { if (charts[key]) { charts[key].destroy(); delete charts[key]; } }
+function chartOpts(prefix = '', isCurrency = false) {
+  return {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#8b949e', font: { size: 10 },
+            callback: v => isCurrency ? (v >= 1e4 ? (v/1e4).toFixed(0)+'万' : v) : v + prefix },
+          grid: { color: 'rgba(255,255,255,.05)' } },
+      y: { ticks: { color: '#8b949e', font: { size: 10 } },
+          grid: { color: 'rgba(255,255,255,.05)' } }
+    }
+  };
+}
+
+// ── EXPORT ────────────────────────────────────
+function exportCSV() {
+  const type   = document.getElementById('filterType')?.value   || '';
+  const client = document.getElementById('filterClient')?.value || '';
+  const params = new URLSearchParams();
+  if (type)   params.set('doc_type', type);
+  if (client) params.set('client', client);
+  window.location.href = '/api/export/csv?' + params;
+}
+function exportItemsCSV() { window.location.href = '/api/export/items-csv'; }
+
+// ── EXCEL DOWNLOAD ───────────────────────────
+function dlExcel(id) {
+  window.location.href = `/api/export/excel/${id}`;
+}
+
+async function downloadExcel(docType) {
+  const client  = document.getElementById('estClient').value.trim();
+  const company = document.getElementById('estCompany').value.trim();
+  const memo    = document.getElementById('estMemo').value.trim();
+  if (!client) { alert('取引先名を入力してください'); return; }
+
+  // 品目を収集
+  const items = estItems.filter(it => it.name).map(it => ({
+    name: it.name || '', qty: parseFloat(it.quantity) || 1,
+    unit: it.unit || '式', price: parseFloat(it.unit_price) || 0, note: ''
+  }));
+  if (!items.length) { alert('品目を1つ以上入力してください'); return; }
+
+  const res = await fetch('/api/export/excel/generate', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ client_name: client, company_name: company,
+                           memo, doc_type: docType, items })
+  });
+  if (!res.ok) { alert('生成エラー'); return; }
+  const blob = await res.blob();
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `${docType}_${client}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INIT ──────────────────────────────────────
+loadDashboard();
+</script>
+</body>
+</html>
