@@ -263,35 +263,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
 </head>
 <body>
 
-<<<<<<< HEAD
-<div class="sidebar-editor">
-  <div class="sidebar-logo">
-    <div class="ew1">EarthWork<br>Document Suite</div>
-    <div class="ew2">書類作成システム</div>
-  </div>
-  <div style="padding:8px 0;">
-    <div class="sidebar-section">書類種別</div>
-    <button class="sidebar-nav active" id="btn-mitumori" onclick="switchDoc('mitumori',this)"><span class="ico">📄</span>御見積書</button>
-    <button class="sidebar-nav" id="btn-seikyuu" onclick="switchDoc('seikyuu',this)"><span class="ico">📋</span>請求書</button>
-    <button class="sidebar-nav" id="btn-nouhin" onclick="switchDoc('nouhin',this)"><span class="ico">📦</span>納品書</button>
-    <div class="sidebar-section">操作</div>
-    <button class="sidebar-btn" onclick="openMaster()"><span class="ico">📚</span>品目マスタ</button>
-    <button class="sidebar-btn" onclick="addRow()"><span class="ico">➕</span>品目を追加</button>
-    <div class="sidebar-zoom">
-      <button onclick="changeZoom(-10)">－</button>
-      <span id="zoomLabel">100%</span>
-      <button onclick="changeZoom(10)">＋</button>
-    </div>
-    <div class="sidebar-section">印刷・保存</div>
-    <button class="sidebar-btn" onclick="window.print()"><span class="ico">🖨</span>印刷 / PDF保存</button>
-    <div class="sidebar-section">管理画面</div>
-    <a class="sidebar-nav" href="/" style="text-decoration:none;"><span class="ico">🏠</span>トップへ戻る</a>
-  </div>
-</div>
-<div class="main-editor">
-=======
 <div class="toolbar">
->>>>>>> parent of 0829fd8 (add sidebar to document editor)
   <a href="/" style="font-family:var(--yu);font-size:12px;font-weight:700;padding:5px 12px;background:#333;color:#aaa;border:1px solid #555;border-radius:3px;text-decoration:none;display:flex;align-items:center;gap:4px;">← 管理画面</a>
   <span class="tb-label">書類種別：</span>
   <button class="tab on" onclick="sw('estimate',this)">御見積書</button>
