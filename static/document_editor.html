@@ -13,32 +13,7 @@
 body { font-family:var(--yu); background:#888; min-height:100vh; }
 
 /* ── TOOLBAR ── */
-.sidebar-editor {
-  width:280px; background:#161b22; border-right:1px solid #30363d;
-  position:fixed; top:0; left:0; height:100vh;
-  display:flex; flex-direction:column; z-index:100; overflow-y:auto;
-}
-.sidebar-logo { padding:20px 16px 12px; border-bottom:1px solid #30363d; }
-.sidebar-logo .ew1 { font-size:20px; font-weight:700; color:#e0e0e0; line-height:1.2; }
-.sidebar-logo .ew2 { font-size:11px; color:#888; margin-top:3px; }
-.sidebar-section { padding:10px 8px 4px; font-size:11px; color:#555; letter-spacing:0.05em; }
-.sidebar-nav { display:flex; align-items:center; gap:8px; padding:9px 12px;
-  font-size:16px; color:#8b949e; cursor:pointer; border-radius:6px; margin:1px 6px;
-  border:none; background:none; width:calc(100% - 12px); text-align:left; transition:all .15s; }
-.sidebar-nav:hover { background:#21262d; color:#e0e0e0; }
-.sidebar-nav.active { background:rgba(56,139,253,.15); color:#388bfd; font-weight:600; }
-.sidebar-nav .ico { width:18px; text-align:center; font-size:14px; }
-.sidebar-btn { display:flex; align-items:center; gap:8px; padding:9px 12px;
-  font-size:16px; color:#8b949e; cursor:pointer; border-radius:6px; margin:1px 6px;
-  border:none; background:none; width:calc(100% - 12px); text-align:left; transition:all .15s; }
-.sidebar-btn:hover { background:#21262d; color:#e0e0e0; }
-.sidebar-zoom { display:flex; align-items:center; gap:6px; padding:6px 12px; margin:1px 6px; }
-.sidebar-zoom button { background:#21262d; border:1px solid #30363d; color:#ccc;
-  border-radius:4px; width:28px; height:28px; cursor:pointer; font-size:16px; }
-.sidebar-zoom button:hover { background:#30363d; }
-.sidebar-zoom span { color:#ccc; font-size:14px; min-width:40px; text-align:center; }
-.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; display:flex; justify-content:center; align-items:flex-start; }
-.toolbar { display:none !important;
+.toolbar {
   position:sticky; top:0; z-index:200; background:#1c1c1c;
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
   padding:9px 20px; box-shadow:0 2px 8px rgba(0,0,0,.5);
@@ -73,7 +48,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
 .btn-print:hover { background:#6e5210; }
 
 /* ── PAPER ── */
-.paper-outer { width:794px; min-height:1123px; margin:28px auto 40px; box-shadow:0 4px 28px rgba(0,0,0,.35); display:block; }
+.paper-outer { width:794px; min-height:1123px; margin:28px auto 40px; box-shadow:0 4px 28px rgba(0,0,0,.35); }
 .doc { background:#fff; width:100%; min-height:1123px; padding:36px 60px 76px; font-family:var(--yu); position:relative; }
 
 /* ── 図3: 最上部中央、3倍 ── */
@@ -275,32 +250,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
 /* ── 印刷 ── */
 @media print {
   body { background:#fff; }
-  .sidebar-editor {
-  width:280px; background:#161b22; border-right:1px solid #30363d;
-  position:fixed; top:0; left:0; height:100vh;
-  display:flex; flex-direction:column; z-index:100; overflow-y:auto;
-}
-.sidebar-logo { padding:20px 16px 12px; border-bottom:1px solid #30363d; }
-.sidebar-logo .ew1 { font-size:20px; font-weight:700; color:#e0e0e0; line-height:1.2; }
-.sidebar-logo .ew2 { font-size:11px; color:#888; margin-top:3px; }
-.sidebar-section { padding:10px 8px 4px; font-size:11px; color:#555; letter-spacing:0.05em; }
-.sidebar-nav { display:flex; align-items:center; gap:8px; padding:9px 12px;
-  font-size:16px; color:#8b949e; cursor:pointer; border-radius:6px; margin:1px 6px;
-  border:none; background:none; width:calc(100% - 12px); text-align:left; transition:all .15s; }
-.sidebar-nav:hover { background:#21262d; color:#e0e0e0; }
-.sidebar-nav.active { background:rgba(56,139,253,.15); color:#388bfd; font-weight:600; }
-.sidebar-nav .ico { width:18px; text-align:center; font-size:14px; }
-.sidebar-btn { display:flex; align-items:center; gap:8px; padding:9px 12px;
-  font-size:16px; color:#8b949e; cursor:pointer; border-radius:6px; margin:1px 6px;
-  border:none; background:none; width:calc(100% - 12px); text-align:left; transition:all .15s; }
-.sidebar-btn:hover { background:#21262d; color:#e0e0e0; }
-.sidebar-zoom { display:flex; align-items:center; gap:6px; padding:6px 12px; margin:1px 6px; }
-.sidebar-zoom button { background:#21262d; border:1px solid #30363d; color:#ccc;
-  border-radius:4px; width:28px; height:28px; cursor:pointer; font-size:16px; }
-.sidebar-zoom button:hover { background:#30363d; }
-.sidebar-zoom span { color:#ccc; font-size:14px; min-width:40px; text-align:center; }
-.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; display:flex; justify-content:center; align-items:flex-start; }
-.toolbar { display:none; }
+  .toolbar { display:none; }
   .paper-outer { margin:0; box-shadow:none; }
   .doc { padding:12mm 15mm 14mm; box-shadow:none; }
   .ii,.client-input,.info-tbl input,.ft-ta,.date-input {
@@ -313,6 +263,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
 </head>
 <body>
 
+<<<<<<< HEAD
 <div class="sidebar-editor">
   <div class="sidebar-logo">
     <div class="ew1">EarthWork<br>Document Suite</div>
@@ -338,7 +289,31 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
   </div>
 </div>
 <div class="main-editor">
+=======
+<div class="toolbar">
+>>>>>>> parent of 0829fd8 (add sidebar to document editor)
+  <a href="/" style="font-family:var(--yu);font-size:12px;font-weight:700;padding:5px 12px;background:#333;color:#aaa;border:1px solid #555;border-radius:3px;text-decoration:none;display:flex;align-items:center;gap:4px;">← 管理画面</a>
+  <span class="tb-label">書類種別：</span>
+  <button class="tab on" onclick="sw('estimate',this)">御見積書</button>
+  <button class="tab"    onclick="sw('invoice',this)">請求書</button>
+  <button class="tab"    onclick="sw('delivery',this)">納品書</button>
+  <span style="color:#888;font-size:11px;font-family:var(--yu);">表示</span>
+  <button class="btn-zoom" onclick="changeZoom(-10)">－</button>
+  <span id="zoomLabel" style="color:#ccc;font-size:11px;font-family:var(--yu);min-width:36px;text-align:center;">100%</span>
+  <button class="btn-zoom" onclick="changeZoom(+10)">＋</button>
+  <span class="gap"></span>
+  <button class="btn-master" onclick="openMaster()">📋 品目マスタ</button>
+  <button class="btn-add"   onclick="addRow()">＋ 品目を追加</button>
+  <button class="btn-print" onclick="window.print()">🖨 印刷 / PDF保存</button>
+</div>
 
+<div class="paper-outer">
+<div class="doc">
+
+  <!-- 図3: 最上部中央 3倍 -->
+  <div class="top-emblem">
+    <img src="data:image/png;base64,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" alt="emblem">
+  </div>
 
   <!-- 書類タイトル -->
   <div class="doc-title" id="docTitle">御見積書</div>
@@ -831,6 +806,5 @@ function changeZoom(delta) {
   document.getElementById('zoomLabel').textContent = zoomLevel + '%';
 }
 </script>
-</div>
 </body>
 </html>
