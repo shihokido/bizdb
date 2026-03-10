@@ -259,9 +259,52 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
   .del-btn,.add-hint { display:none!important; }
   * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; } @page { size:A4 portrait; margin:0; }
 }
+
+/* ── SIDEBAR (from index.html) ── */
+.sidebar {
+  width:280px; background:#161b22; border-right:1px solid #30363d;
+  position:fixed; top:0; left:0; height:100vh;
+  display:flex; flex-direction:column; z-index:100; overflow-y:auto;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+.logo { padding:20px 16px 16px; border-bottom:1px solid #30363d; }
+.nav-section { padding:12px 16px 4px; font-size:11px; color:#555; letter-spacing:0.08em; text-transform:uppercase; }
+.nav-item {
+  display:flex; align-items:center; gap:10px; padding:9px 14px;
+  font-size:16px; color:#8b949e; cursor:pointer; border-radius:6px; margin:1px 6px;
+  border:none; background:none; width:calc(100% - 12px); text-align:left; transition:all .15s;
+  text-decoration:none;
+}
+.nav-item:hover { background:#21262d; color:#e0e0e0; }
+.nav-item.active { background:rgba(56,139,253,.15); color:#388bfd; font-weight:600; }
+.nav-item .ico { width:20px; text-align:center; font-size:15px; }
+.main-content { margin-left:280px; }
+
 </style>
 </head>
 <body>
+
+<nav class="sidebar">
+  <div class="logo">
+    <div style="line-height:1.2">
+      <div style="font-size:20px;font-weight:700;color:#e0e0e0;letter-spacing:0.03em;">EarthWork</div>
+      <div style="font-size:20px;font-weight:700;color:#e0e0e0;letter-spacing:0.03em;">Document Suite</div>
+      <div style="font-size:13px;color:#888;margin-top:4px;">書類データベース</div>
+    </div>
+  </div>
+  <div class="nav-section">メイン</div>
+  <a class="nav-item" href="/"><span class="ico">📊</span><span>ダッシュボード</span></a>
+  <a class="nav-item" href="/#upload"><span class="ico">⬆️</span><span>アップロード</span></a>
+  <a class="nav-item" href="/#documents"><span class="ico">📋</span><span>書類一覧</span></a>
+  <a class="nav-item" href="/#search"><span class="ico">🔍</span><span>品目検索</span></a>
+  <div class="nav-section">分析</div>
+  <a class="nav-item" href="/#clients"><span class="ico">🏢</span><span>取引先分析</span></a>
+  <a class="nav-item" href="/#estimate"><span class="ico">🤖</span><span>AI見積書</span></a>
+  <div class="nav-section">書類作成</div>
+  <a class="nav-item active" href="/static/document_editor.html"><span class="ico">📄</span><span>書類エディタ</span></a>
+</nav>
+
+<div class="main-content">
 
 <div class="toolbar">
   <a href="/" style="font-family:var(--yu);font-size:12px;font-weight:700;padding:5px 12px;background:#333;color:#aaa;border:1px solid #555;border-radius:3px;text-decoration:none;display:flex;align-items:center;gap:4px;">← 管理画面</a>
@@ -778,5 +821,6 @@ function changeZoom(delta) {
   document.getElementById('zoomLabel').textContent = zoomLevel + '%';
 }
 </script>
+</div>
 </body>
 </html>
