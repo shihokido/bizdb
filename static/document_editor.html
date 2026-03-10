@@ -530,19 +530,19 @@ body { font-family:var(--yu); background:#444; min-height:100vh; }
     </div>
   </div>
   <div class="nav-section">メイン</div>
-  <button class="nav-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span><span>ダッシュボード</span></button>
-  <button class="nav-item" onclick="nav('upload',this)"><span class="ico">⬆️</span><span>アップロード</span></button>
-  <button class="nav-item" onclick="nav('documents',this)"><span class="ico">📋</span><span>書類一覧</span></button>
-  <button class="nav-item" onclick="nav('search',this)"><span class="ico">🔍</span><span>品目検索</span></button>
+  <button class="nav-item active" onclick="location.href='/'"><span class="ico">📊</span><span>ダッシュボード</span></button>
+  <button class="nav-item" onclick="location.href='/#upload'"><span class="ico">⬆️</span><span>アップロード</span></button>
+  <button class="nav-item" onclick="location.href='/#documents'"><span class="ico">📋</span><span>書類一覧</span></button>
+  <button class="nav-item" onclick="location.href='/#search'"><span class="ico">🔍</span><span>品目検索</span></button>
   <div class="nav-section">分析</div>
-  <button class="nav-item" onclick="nav('clients',this)"><span class="ico">🏢</span><span>取引先分析</span></button>
-  <button class="nav-item" onclick="nav('market',this)"><span class="ico">📈</span><span>相場検索</span></button>
+  <button class="nav-item" onclick="location.href='/#clients'"><span class="ico">🏢</span><span>取引先分析</span></button>
+  <button class="nav-item" onclick="location.href='/#market'"><span class="ico">📈</span><span>相場検索</span></button>
   <div class="nav-section">作成</div>
-  <button class="nav-item" onclick="nav('estimate',this)"><span class="ico">✏️</span><span>見積書作成</span></button>
+  <button class="nav-item" onclick="location.href='/#estimate'"><span class="ico">✏️</span><span>見積書作成</span></button>
   <a class="nav-item" href="/static/document_editor.html" target="_blank" style="text-decoration:none;color:inherit;"><span class="ico">📄</span><span>書類エディタ</span></a>
   <div style="flex:1"></div>
   <div style="padding:12px 6px;border-top:1px solid var(--border)">
-    <button class="nav-item" onclick="exportCSV()"><span class="ico">📥</span><span>CSVエクスポート</span></button>
+    <button class="nav-item" onclick="location.href='/#export'"><span class="ico">📥</span><span>CSVエクスポート</span></button>
   </div>
 </nav>
 
