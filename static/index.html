@@ -510,6 +510,13 @@ zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add(
 zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
 zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); handleUpload(e.dataTransfer.files[0]); });
 
+// ?page=xxx で直接ページを開く
+const _urlPage = new URLSearchParams(location.search).get('page');
+if (_urlPage) {
+  const _btn = document.querySelector('.nav-item[data-page="'+_urlPage+'"]');
+  if (_btn) nav(_urlPage, _btn);
+}
+
 function setDocType(t, btn) {
   selectedDocType = t;
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
