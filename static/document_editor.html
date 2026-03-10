@@ -668,6 +668,15 @@ function sw(type, btn) {
   zoomLevel = 100;
   const _p = document.querySelector('.paper-outer'); if(_p) _p.style.zoom = '100%';
   const _z = document.getElementById('zoomLabel'); if(_z) _z.textContent = '100%';
+  // 納品書切替時：請求書の内容を同期してロック
+  if (type === 'delivery') {
+    syncDeliveryFromInvoice();
+    setTimeout(lockDeliveryFields, 50);
+  }
+  // 請求書・見積書切替時：ロック解除
+  if (type === 'invoice' || type === 'estimate') {
+    setTimeout(unlockAllFields, 50);
+  }
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   const map = {
@@ -1020,6 +1029,55 @@ function doPrint(mode) {
       }
     }, 800);
   }
+}
+</script>
+
+
+<script>
+// 納品書ロック/同期
+function syncDeliveryFromInvoice() {
+  // 品目行（.ii系input）はDOM共有なのでそのまま反映済み
+  // ヘッダー系フィールドも共有IDなので同じ要素 → 何もしなくてOK
+  // （請求書と納品書は同じinput要素を参照しているため自動反映）
+}
+
+function lockDeliveryFields() {
+  // ftText（特記事項）以外の全inputをreadonly+グレーアウト
+  document.querySelectorAll('input, textarea').forEach(el => {
+    if (el.id === 'ftText') return; // 特記事項は編集可能
+    if (el.closest('#masterModal, #searchInput')) return; // マスタモーダルは除外
+    el.readOnly = true;
+    el.style.pointerEvents = 'none';
+    el.style.opacity = '0.7';
+  });
+  // 品目追加ボタン・検索ボタンも無効化
+  document.querySelectorAll('.btn-add, .row-add-btn, .search-btn').forEach(el => {
+    el.disabled = true;
+    el.style.opacity = '0.4';
+    el.style.cursor = 'not-allowed';
+  });
+  // 行削除ボタンも無効化
+  document.querySelectorAll('.del-btn, .row-del').forEach(el => {
+    el.disabled = true;
+    el.style.opacity = '0.4';
+  });
+}
+
+function unlockAllFields() {
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.readOnly = false;
+    el.style.pointerEvents = '';
+    el.style.opacity = '';
+  });
+  document.querySelectorAll('.btn-add, .row-add-btn, .search-btn').forEach(el => {
+    el.disabled = false;
+    el.style.opacity = '';
+    el.style.cursor = '';
+  });
+  document.querySelectorAll('.del-btn, .row-del').forEach(el => {
+    el.disabled = false;
+    el.style.opacity = '';
+  });
 }
 </script>
 
