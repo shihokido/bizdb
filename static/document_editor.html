@@ -316,7 +316,7 @@ body { font-family:var(--yu); background:#444; min-height:100vh; }
   <span class="gap"></span>
   <button class="btn-master" onclick="openMaster()">品目マスタ</button>
   <button class="btn-add" onclick="addRow()">＋ 品目を追加</button>
-  <button class="btn-print" onclick="window.print()">印刷 / PDF保存</button>
+  <button class="btn-print" onclick="printDoc()">印刷 / PDF保存</button>
 </div>
 
 <div class="paper-outer">
@@ -961,4 +961,66 @@ function changeZoom(delta) {
         </svg>
         <span id="claude-static-close-tooltip" style="position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); padding: 6px 12px; background: #30302E; color: #FAF9F5; border-radius: 6px; font-size: 12px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">Dismiss</span>
       </button>
-    </div></body></html>
+    </div>
+<!-- 印刷選択モーダル -->
+<div id="printModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:8px;padding:32px 36px;box-shadow:0 8px 40px rgba(0,0,0,0.25);min-width:320px;text-align:center;font-family:var(--yu);">
+    <p style="font-size:16px;font-weight:700;margin:0 0 8px;">印刷する書類を選択</p>
+    <p style="font-size:13px;color:#666;margin:0 0 24px;">納品書も一緒に発行しますか？</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <button onclick="doPrint('invoice_only')" style="padding:10px 20px;background:#8b6914;color:#fff;border:none;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--yu);">請求書のみ</button>
+      <button onclick="doPrint('both')" style="padding:10px 20px;background:#2d6a4f;color:#fff;border:none;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--yu);">請求書＋納品書</button>
+      <button onclick="closePrintModal()" style="padding:10px 20px;background:#888;color:#fff;border:none;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--yu);">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function getCurrentDocType() {
+  const onTab = document.querySelector('.tab.on');
+  if (!onTab) return null;
+  const m = onTab.getAttribute('onclick').match(/\'(\w+)\'/);
+  return m ? m[1] : null;
+}
+
+function printDoc() {
+  const docType = getCurrentDocType();
+  if (docType === 'invoice') {
+    const modal = document.getElementById('printModal');
+    modal.style.display = 'flex';
+  } else {
+    window.print();
+  }
+}
+
+function closePrintModal() {
+  document.getElementById('printModal').style.display = 'none';
+}
+
+function doPrint(mode) {
+  closePrintModal();
+  if (mode === 'invoice_only') {
+    window.print();
+  } else {
+    // 請求書印刷
+    window.print();
+    // 少し待って納品書に切り替えて印刷
+    setTimeout(() => {
+      const deliveryTab = Array.from(document.querySelectorAll('.tab')).find(t => t.getAttribute('onclick').includes('delivery'));
+      if (deliveryTab) {
+        deliveryTab.click();
+        setTimeout(() => {
+          window.print();
+          // 印刷後に請求書に戻す
+          setTimeout(() => {
+            const invoiceTab = Array.from(document.querySelectorAll('.tab')).find(t => t.getAttribute('onclick').includes('invoice'));
+            if (invoiceTab) invoiceTab.click();
+          }, 500);
+        }, 600);
+      }
+    }, 800);
+  }
+}
+</script>
+
+</body></html>
