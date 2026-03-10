@@ -16,7 +16,7 @@ body { font-family:var(--yu); background:#444; min-height:100vh; }
 .toolbar {
   position:sticky; top:0; z-index:200; background:#1c1c1c;
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-  padding:22px 20px; box-shadow:0 2px 8px rgba(0,0,0,.5);
+  padding:32px 20px; box-shadow:0 2px 8px rgba(0,0,0,.5);
 }
 .tb-label { font-size:11px; color:#888; font-family:var(--yu); margin-right:2px; }
 .tab {
@@ -620,7 +620,7 @@ function amt(r)    {
 <!-- 品目マスタ モーダル -->
 <div id="masterModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:6px;width:700px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.4);">
-    <div style="padding:22px 20px;background:#1c1c1c;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px;">
+    <div style="padding:32px 20px;background:#1c1c1c;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px;">
       <span style="color:#fff;font-weight:700;font-family:var(--yu);font-size:14px;">📋 品目マスタ管理</span>
       <span style="flex:1"></span>
       <button onclick="exportMasterCSV()" style="font-family:var(--yu);font-size:11px;padding:4px 10px;background:#2d6a4f;color:#fff;border:none;border-radius:3px;cursor:pointer;">📥 CSV書出し</button>
@@ -645,7 +645,7 @@ function amt(r)    {
 <!-- 品目検索 モーダル -->
 <div id="searchModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:6px;width:600px;max-width:95vw;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.4);">
-    <div style="padding:22px 20px;background:#1c1c1c;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px;">
+    <div style="padding:32px 20px;background:#1c1c1c;border-radius:6px 6px 0 0;display:flex;align-items:center;gap:10px;">
       <span style="color:#fff;font-weight:700;font-family:var(--yu);font-size:14px;">🔍 品目を検索</span>
       <button onclick="closeSearch()" style="margin-left:auto;background:none;border:none;color:#aaa;font-size:18px;cursor:pointer;padding:0 4px;">✕</button>
     </div>
