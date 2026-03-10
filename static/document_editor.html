@@ -269,6 +269,288 @@ body { font-family:var(--yu); background:#444; min-height:100vh; }
 .logo-icon{font-size:22px;margin-bottom:4px;display:block}
 .logo-title{font-size:15px;font-weight:700;color:var(--text)}
 .logo-sub{font-size:11px;color:var(--text2)}
+.nav-section{padding:12px 16px 4px;font-size:11px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:16px;
+  color:var(--text2);cursor:pointer;border-radius:6px;margin:1px 6px;
+  font-size:14px;border:none;background:none;width:calc(100% - 12px);text-align:left;transition:all .15s}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:rgba(56,139,253,.15);color:var(--accent);font-weight:500}
+.nav-item .ico{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+
+/* TOPBAR */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-size:18px;font-weight:700;color:var(--text)}
+.page-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* CARD */
+>
+:root {
+  --yu: "Yu Gothic Medium","游ゴシック Medium","YuGothic","游ゴシック体",
+        "Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:var(--yu); background:#444; min-height:100vh; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  position:sticky; top:0; z-index:200; background:#1c1c1c;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:26px 20px; box-shadow:0 2px 8px rgba(0,0,0,.5);
+}
+.tb-label { font-size:13px; color:#888; font-family:var(--yu); margin-right:2px; }
+.tab {
+  font-family:var(--yu); font-size:14px; padding:5px 16px; border-radius:3px;
+  border:1px solid #555; background:none; color:#aaa; cursor:pointer; transition:all .15s;
+}
+.tab:hover { border-color:#999; color:#fff; }
+.tab.on { background:#fff; color:#111; border-color:#fff; font-weight:700; }
+.gap { flex:1; }
+.btn-add {
+  font-family:var(--yu); font-size:14px; font-weight:700;
+  padding:6px 14px; background:#1e5799; color:#fff; border:none; border-radius:3px; cursor:pointer;
+}
+.btn-add:hover { background:#174a80; }
+.btn-zoom {
+  font-family:var(--yu); font-size:14px; font-weight:700;
+  padding:3px 10px; background:#333; color:#ccc; border:1px solid #555; border-radius:3px; cursor:pointer;
+}
+.btn-zoom:hover { background:#444; color:#fff; }
+.btn-master {
+  font-family:var(--yu); font-size:14px; font-weight:700;
+  padding:6px 14px; background:#2d6a4f; color:#fff; border:none; border-radius:3px; cursor:pointer;
+}
+.btn-master:hover { background:#1b4332; }
+.btn-print {
+  font-family:var(--yu); font-size:14px; font-weight:700;
+  padding:6px 18px; background:#8b6914; color:#fff; border:none; border-radius:3px; cursor:pointer;
+}
+.btn-print:hover { background:#6e5210; }
+
+/* ── PAPER ── */
+.paper-outer { width:794px; min-height:1123px; margin:28px auto 40px; box-shadow:0 4px 28px rgba(0,0,0,.35); }
+.doc { background:#fff; width:100%; min-height:1123px; padding:36px 60px 76px; font-family:var(--yu); position:relative; }
+
+/* ── 図3: 最上部中央、3倍 ── */
+.top-emblem { text-align:center; margin-bottom:8px; }
+.top-emblem img { width:129px; height:auto; display:inline-block; }
+
+/* ── 書類タイトル ── */
+.doc-title {
+  text-align:center; font-family:var(--yu); font-size:20pt;
+  font-weight:400; letter-spacing:0.05em; color:#111; margin:6px 0 9px;
+}
+
+/* ── 日付 ── */
+.date-line { text-align:right; font-size:10.5pt; margin-bottom:14px; font-family:var(--yu); }
+.date-input {
+  border:none; background:transparent; font-family:var(--yu);
+  font-size:10.5pt; color:#111; outline:none; text-align:right; width:170px;
+}
+.date-input:focus { background:#f0f5ff; }
+
+/* ── ヘッダー2カラム
+   左カラムを55%→45%に縮小、右を広げて左に寄せる
+   ── */
+.header-grid {
+  display:grid;
+  grid-template-columns: 58% 42%;   /* 御見積書の右端に合わせた幅 */
+  gap:0;
+  align-items:start;
+}
+
+/* 左: 宛先 */
+.left-col { padding-right:2px; }
+.client-row {
+  display:flex; align-items:flex-end;
+  border-bottom:2.2px solid #111;
+  padding-bottom:4px; margin-bottom:9px;
+}
+.client-input {
+  flex:1; font-family:var(--yu); font-size:13pt;
+  border:none; background:transparent; color:#111; outline:none;
+}
+.client-input:focus { background:#f0f5ff; }
+.sama { font-size:13pt; margin-left:5px; white-space:nowrap; font-family:var(--yu); }
+.body-msg { font-size:10pt; color:#111; margin-bottom:8px; font-family:var(--yu); }
+.info-tbl { width:100%; border-collapse:collapse; }
+.info-tbl td {
+  font-size:10pt; padding:4px 5px;
+  border-top:1px solid #ccc;
+  font-family:var(--yu); vertical-align:middle;
+}
+.info-tbl tr:last-child td {
+  border-bottom:1px solid #ccc;
+}
+.info-tbl .lbl { white-space:nowrap; width:68px; color:#111; }
+.info-tbl input {
+  width:100%; border:none; background:transparent;
+  font-family:var(--yu); font-size:10pt; color:#111; outline:none;
+}
+.info-tbl input:focus { background:#f0f5ff; }
+
+/* ── 右: 会社情報 ── */
+.right-col {
+  padding-left:16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;  /* 担当のabsolute配置の基準 */
+}
+.tanto-abs {
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:240px;
+}
+
+/* ★ 図2: 1.5倍（160px→240px） */
+.co-logo { margin-bottom:5px; margin-left:24px; margin-top:6px; }
+.co-logo img {
+  width:240px;   /* 160px × 1.5 = 240px */
+  height:auto;
+  display:block;
+}
+
+/* 社名・住所ブロック ─ 中央揃え＋相対位置で印鑑を右に */
+.co-info {
+  text-align:center;
+  position:relative;
+  width:100%;
+  margin-top:18px;
+}
+.co-name {
+  font-size:10.5pt; font-weight:400;
+  font-family:var(--yu); line-height:1.5; display:block; padding-left:10px;
+}
+.co-addr {
+  font-size:7.5pt; color:#333; line-height:1.8;
+  font-family:var(--yu); display:block; margin-top:2px;
+}
+
+/* ★ 図1: 社名〜登録番号の上下に合わせてストレッチ
+   社名(line-height1.5 × 10.5pt) + 住所3行(line-height1.8 × 7.5pt × 3) + margin2px
+   ≒ 約15.75pt + 40.5pt + 2px ≒ 約75px
+   position:absolute で右側に配置、top/bottomで上下を合わせる */
+.hanko-stamp {
+  position:absolute;
+  right:-10px;        /* 右端から外側へはみ出す */
+  top:0;
+  bottom:0;
+  width:auto;         /* 高さに合わせて幅を自動計算 */
+  height:100%;        /* co-infoの高さ全体に合わせる */
+  object-fit:contain;
+  object-position:center;
+  opacity:0.88;
+  mix-blend-mode:multiply;
+  pointer-events:none;
+}
+
+
+
+/* ── 区切り ── */
+.divider { display:none; }
+
+/* ── 合計金額ボックス ── */
+.sum-box {
+  display:grid; grid-template-columns:100px 1fr 14px 72px 1fr;
+  border:1.5px solid #555; margin:18px 0 8px;
+}
+.sb {
+  padding:5px 7px; display:flex; align-items:center;
+  border-right:1.5px solid #555; font-family:var(--yu);
+}
+.sb:last-child { border-right:none; }
+.sb.lbl { background:#f2f2f2; justify-content:center; font-size:9.5pt; white-space:nowrap; }
+.sb.val { justify-content:center; font-size:14pt; font-weight:700; }
+.sb.sep { padding:0; }
+
+/* ── 品目テーブル ── */
+.item-tbl { width:100%; border-collapse:collapse; font-family:var(--yu); margin-top:6px; }
+.item-tbl th {
+  background:#f2f2f2; font-size:9.5pt; font-weight:500;
+  padding:4px 3px; text-align:center;
+  border:1px solid #bbb; border-top:1.5px solid #555; font-family:var(--yu);
+}
+.item-tbl th:first-child { border-left:1.5px solid #555; }
+.item-tbl th:last-child  { border-right:1.5px solid #555; }
+.item-tbl td {
+  font-size:10pt; padding:2.5px 4px;
+  border-bottom:1px dashed #c5c5c5; border-left:1px solid #ddd;
+  vertical-align:middle; font-family:var(--yu);
+}
+.item-tbl td:first-child { border-left:1.5px solid #555; }
+.item-tbl td:last-child  { border-right:1.5px solid #555; }
+#tbody tr:last-child td { border-bottom:1.5px solid #555; }
+.item-tbl tr:nth-child(odd)  td { background:#fafafa; }
+.item-tbl tr:nth-child(even) td { background:#fff; }
+.td-c { text-align:center; }
+.td-r { text-align:right; font-variant-numeric:tabular-nums; }
+.ii {
+  width:100%; border:none; background:transparent;
+  font-family:var(--yu); font-size:10pt; color:#111; outline:none;
+}
+.ii:focus { background:#eef4ff; }
+.ii.r { text-align:right; }
+.ii.c { text-align:center; }
+.del-btn {
+  font-family:var(--yu); font-size:9pt; background:none;
+  border:1px solid #f9a; color:#c33; border-radius:2px;
+  padding:0 4px; cursor:pointer; margin-left:2px;
+}
+.del-btn:hover { background:#fee4e4; }
+.add-hint { font-size:8.5pt; color:#bbb; text-align:center; padding:3px 0; font-family:var(--yu); }
+
+/* ── フッター ── */
+.footer {
+  display:grid; grid-template-columns:2fr 14px 1fr;
+  border:1.5px solid #555; border-top:1.5px solid #555; font-family:var(--yu); margin-top:16px;
+}
+.ft-left { padding:8px 8px 6px; border-right:none; }
+.ft-head { font-size:10pt; font-weight:700; margin-bottom:4px; font-family:var(--yu); }
+.ft-ta {
+  border:none; background:transparent; width:100%; resize:none; outline:none;
+  font-family:var(--yu); font-size:9.5pt; color:#222; line-height:1.65;
+}
+.ft-sep { border-right:1.5px solid #555; }
+.ft-right { display:flex; flex-direction:column; height:100%; }
+.ft-row { flex:1; }
+.ft-row { display:grid; grid-template-columns:66px 1fr; border-bottom:1px solid #ccc; }
+.ft-row:last-child { border-bottom:none; }
+.ft-lbl {
+  background:#f2f2f2; font-size:9.5pt; padding:4px 4px; text-align:center;
+  border-right:1px solid #ccc; display:flex; align-items:center; justify-content:center;
+  font-family:var(--yu);
+}
+.ft-val {
+  padding:4px 7px; font-size:10pt; display:flex; align-items:center;
+  justify-content:flex-end; font-weight:500; font-family:var(--yu);
+}
+
+/* ── 印刷 ── */
+@media print {
+  body { background:#fff; }
+  .toolbar { display:none; }
+  .paper-outer { margin:0; box-shadow:none; }
+  .doc { padding:12mm 15mm 14mm; box-shadow:none; }
+  .ii,.client-input,.info-tbl input,.ft-ta,.date-input {
+    border:none!important; background:transparent!important;
+  }
+  .del-btn,.add-hint { display:none!important; }
+  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; } @page { size:A4 portrait; margin:0; }
+}
+
+/* ── SIDEBAR (from index.html) ── */
+.sidebar{width:280px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50}
+.main{margin-left:280px;flex:1;padding:28px;min-height:100vh}
+.page{display:none}.page.active{display:block}
+
+/* SIDEBAR */
+.logo{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.logo-icon{font-size:22px;margin-bottom:4px;display:block}
+.logo-title{font-size:15px;font-weight:700;color:var(--text)}
+.logo-sub{font-size:11px;color:var(--text2)}
 .nav-section{padding:12px 8px 4px;font-size:11px;color:var(--text3);
   text-transform:uppercase;letter-spacing:.08em;font-weight:600}
 .nav-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:16px;
@@ -530,19 +812,19 @@ body { font-family:var(--yu); background:#444; min-height:100vh; }
     </div>
   </div>
   <div class="nav-section">メイン</div>
-  <button class="nav-item active" onclick="location.href='/'"><span class="ico">📊</span><span>ダッシュボード</span></button>
-  <button class="nav-item" onclick="location.href='/?page=upload'"><span class="ico">⬆️</span><span>アップロード</span></button>
-  <button class="nav-item" onclick="location.href='/?page=documents'"><span class="ico">📋</span><span>書類一覧</span></button>
-  <button class="nav-item" onclick="location.href='/?page=search'"><span class="ico">🔍</span><span>品目検索</span></button>
+  <button class="nav-item active" onclick="location.href='/'" data-page="dashboard"><span class="ico">📊</span><span>ダッシュボード</span></button>
+  <button class="nav-item" onclick="location.href='/?page=upload'" data-page="upload"><span class="ico">⬆️</span><span>アップロード</span></button>
+  <button class="nav-item" onclick="location.href='/?page=documents'" data-page="documents"><span class="ico">📋</span><span>書類一覧</span></button>
+  <button class="nav-item" onclick="location.href='/?page=search'" data-page="search"><span class="ico">🔍</span><span>品目検索</span></button>
   <div class="nav-section">分析</div>
-  <button class="nav-item" onclick="location.href='/?page=clients'"><span class="ico">🏢</span><span>取引先分析</span></button>
-  <button class="nav-item" onclick="location.href='/?page=market'"><span class="ico">📈</span><span>相場検索</span></button>
+  <button class="nav-item" onclick="location.href='/?page=clients'" data-page="clients"><span class="ico">🏢</span><span>取引先分析</span></button>
+  <button class="nav-item" onclick="location.href='/?page=market'" data-page="market"><span class="ico">📈</span><span>相場検索</span></button>
   <div class="nav-section">作成</div>
-  <button class="nav-item" onclick="location.href='/?page=estimate'"><span class="ico">✏️</span><span>見積書作成</span></button>
-  <a class="nav-item" href="/static/document_editor.html" target="_blank" style="text-decoration:none;color:inherit;"><span class="ico">📄</span><span>書類エディタ</span></a>
+  <button class="nav-item" onclick="location.href='/?page=estimate'" data-page="estimate"><span class="ico">✏️</span><span>見積書作成</span></button>
+  <a class="nav-item" href="/static/document_editor.html" style="text-decoration:none;color:inherit;"><span class="ico">📄</span><span>書類エディタ</span></a>
   <div style="flex:1"></div>
   <div style="padding:12px 6px;border-top:1px solid var(--border)">
-    <button class="nav-item" onclick="location.href='/#export'"><span class="ico">📥</span><span>CSVエクスポート</span></button>
+    <button class="nav-item" onclick="location.href='/?page=export'"><span class="ico">📥</span><span>CSVエクスポート</span></button>
   </div>
 </nav>
 
