@@ -37,7 +37,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
   border-radius:4px; width:28px; height:28px; cursor:pointer; font-size:16px; }
 .sidebar-zoom button:hover { background:#30363d; }
 .sidebar-zoom span { color:#ccc; font-size:14px; min-width:40px; text-align:center; }
-.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; }
+.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; display:flex; justify-content:center; align-items:flex-start; }
 .toolbar { display:none !important;
   position:sticky; top:0; z-index:200; background:#1c1c1c;
   display:flex; align-items:center; gap:8px; flex-wrap:wrap;
@@ -73,7 +73,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
 .btn-print:hover { background:#6e5210; }
 
 /* ── PAPER ── */
-.paper-outer { width:794px; min-height:1123px; margin:28px auto 40px; box-shadow:0 4px 28px rgba(0,0,0,.35); }
+.paper-outer { width:794px; min-height:1123px; margin:28px auto 40px; box-shadow:0 4px 28px rgba(0,0,0,.35); display:block; }
 .doc { background:#fff; width:100%; min-height:1123px; padding:36px 60px 76px; font-family:var(--yu); position:relative; }
 
 /* ── 図3: 最上部中央、3倍 ── */
@@ -299,7 +299,7 @@ body { font-family:var(--yu); background:#888; min-height:100vh; }
   border-radius:4px; width:28px; height:28px; cursor:pointer; font-size:16px; }
 .sidebar-zoom button:hover { background:#30363d; }
 .sidebar-zoom span { color:#ccc; font-size:14px; min-width:40px; text-align:center; }
-.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; }
+.main-editor { margin-left:280px; min-height:100vh; background:#888; padding:20px; display:flex; justify-content:center; align-items:flex-start; }
 .toolbar { display:none; }
   .paper-outer { margin:0; box-shadow:none; }
   .doc { padding:12mm 15mm 14mm; box-shadow:none; }
