@@ -5,7 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EarthWork Document Suite</title><title style="display:none">EarthWork Document Suite</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+// 書類エディタからの遷移: ?page=xxx でページを開く
+(function(){
+  const p = new URLSearchParams(location.search).get('page');
+  if(p) { window.addEventListener('DOMContentLoaded', () => { const btn = document.querySelector('.nav-item[data-page="'+p+'"]'); if(btn) nav(p, btn); }); }
+})();
+</script>
 <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --surface2: #1c2330; --surface3: #21262d;
@@ -226,15 +232,15 @@ textarea.input{resize:vertical;min-height:70px}
     </div>
   </div>
   <div class="nav-section">メイン</div>
-  <button class="nav-item active" onclick="nav('dashboard',this)"><span class="ico">📊</span><span>ダッシュボード</span></button>
-  <button class="nav-item" onclick="nav('upload',this)"><span class="ico">⬆️</span><span>アップロード</span></button>
-  <button class="nav-item" onclick="nav('documents',this)"><span class="ico">📋</span><span>書類一覧</span></button>
-  <button class="nav-item" onclick="nav('search',this)"><span class="ico">🔍</span><span>品目検索</span></button>
+  <button class="nav-item active" onclick="nav('dashboard',this)" data-page="dashboard"><span class="ico">📊</span><span>ダッシュボード</span></button>
+  <button class="nav-item" onclick="nav('upload',this)" data-page="upload"><span class="ico">⬆️</span><span>アップロード</span></button>
+  <button class="nav-item" onclick="nav('documents',this)" data-page="documents"><span class="ico">📋</span><span>書類一覧</span></button>
+  <button class="nav-item" onclick="nav('search',this)" data-page="search"><span class="ico">🔍</span><span>品目検索</span></button>
   <div class="nav-section">分析</div>
-  <button class="nav-item" onclick="nav('clients',this)"><span class="ico">🏢</span><span>取引先分析</span></button>
-  <button class="nav-item" onclick="nav('market',this)"><span class="ico">📈</span><span>相場検索</span></button>
+  <button class="nav-item" onclick="nav('clients',this)" data-page="clients"><span class="ico">🏢</span><span>取引先分析</span></button>
+  <button class="nav-item" onclick="nav('market',this)" data-page="market"><span class="ico">📈</span><span>相場検索</span></button>
   <div class="nav-section">作成</div>
-  <button class="nav-item" onclick="nav('estimate',this)"><span class="ico">✏️</span><span>見積書作成</span></button>
+  <button class="nav-item" onclick="nav('estimate',this)" data-page="estimate"><span class="ico">✏️</span><span>見積書作成</span></button>
   <a class="nav-item" href="/static/document_editor.html" style="text-decoration:none;color:inherit;"><span class="ico">📄</span><span>書類エディタ</span></a>
   <div style="flex:1"></div>
   <div style="padding:12px 6px;border-top:1px solid var(--border)">
