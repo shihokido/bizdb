@@ -666,7 +666,7 @@ function alignLeftCol() {
 
 function sw(type, btn) {
   zoomLevel = 100;
-  const _p = document.querySelector('.paper'); if(_p) _p.style.transform = 'scale(1)';
+  const _p = document.querySelector('.paper-outer'); if(_p) _p.style.zoom = '100%';
   const _z = document.getElementById('zoomLabel'); if(_z) _z.textContent = '100%';
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
