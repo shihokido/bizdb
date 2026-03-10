@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EarthWork Document Suite</title><title style="display:none">EarthWork Document Suite</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
-// 書類エディタからの遷移: ?page=xxx でページを開く
-(function(){
-  const p = new URLSearchParams(location.search).get('page');
-  if(p) { window.addEventListener('DOMContentLoaded', () => { const btn = document.querySelector('.nav-item[data-page="'+p+'"]'); if(btn) nav(p, btn); }
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>アースワーク 書類作成システム</title>
+<style>
+:root {
+  --yu: "Yu Gothic Medium","游ゴシック Medium","YuGothic","游ゴシック体",
+        "Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+}
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:var(--yu); background:#444; min-height:100vh; }
 
