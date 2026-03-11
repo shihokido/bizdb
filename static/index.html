@@ -1914,7 +1914,6 @@ function addRow() {
 function del(i) { if(rows.length<=1) return; rows.splice(i,1); render(); calc(); }
 function g(id)     { return document.getElementById(id); }
 function set(id,v) { const e=g(id); if(e) e.textContent=v; }
-function fmt(n)    { return n.toLocaleString('ja-JP'); }
 function yen(n)    { return '¥'+n.toLocaleString('ja-JP'); }
 function x(s)      { return (s||'').replace(/"/g,'&quot;'); }
 function amt(r)    {
