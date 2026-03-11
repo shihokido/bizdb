@@ -1740,7 +1740,7 @@ loadDashboard();
 
 <script>
 'use strict';
-let rows = [];
+window.rows = []; var rows = window.rows;
 
 (function init() {
   const d = new Date();
@@ -2253,5 +2253,43 @@ function unlockAllFields() {
 }
 </script>
 </div>
+
+<script>
+// === SPA対応: 書類エディタ関数の上書き ===
+(function() {
+  // nav('editor')で呼ばれる初期化
+  var _editorReady = false;
+
+  function ensureEditorInit() {
+    if (_editorReady) return;
+    _editorReady = true;
+    // rows変数をグローバルに再定義して初期化
+    if (typeof rows !== 'undefined') {
+      // すでにある場合はrender/calcを呼ぶだけ
+      if (typeof render === 'function') render();
+      if (typeof calc === 'function') calc();
+    }
+  }
+
+  // changeZoom: .paper-outer → #page-editor .doc に修正
+  window.changeZoom = function(delta) {
+    window._zoomLevel = Math.min(150, Math.max(50, (window._zoomLevel || 100) + delta));
+    var docEl = document.querySelector('#page-editor .doc');
+    if (docEl) docEl.style.zoom = window._zoomLevel + '%';
+    var label = document.getElementById('zoomLabel');
+    if (label) label.textContent = window._zoomLevel + '%';
+  };
+
+  // nav関数にeditor初期化を追加
+  var _origNav = window.nav;
+  window.nav = function(page, btn) {
+    _origNav(page, btn);
+    if (page === 'editor') {
+      ensureEditorInit();
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
