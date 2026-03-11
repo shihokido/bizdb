@@ -1837,6 +1837,12 @@ function alignLeftCol() {
 }
 
 function sw(type, btn) {
+  // 書類タブ切り替え時にズームを100%にリセット
+  window._zoomLevel = 100;
+  var docEl = document.querySelector('#page-editor .doc');
+  if (docEl) docEl.style.zoom = '100%';
+  var label = document.getElementById('zoomLabel');
+  if (label) label.textContent = '100%';
   zoomLevel = 100;
   const _p = document.querySelector('.paper-outer'); if(_p) _p.style.zoom = '100%';
   const _z = document.getElementById('zoomLabel'); if(_z) _z.textContent = '100%';
