@@ -1746,7 +1746,7 @@ window.rows = []; var rows = window.rows;
   const d = new Date();
   document.getElementById('docDate').value =
     d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日';
-  for (let i=0; i<12; i++) rows.push({name:'',qty:'',unit:'',price:'',note:''});
+  for (let i=0; i<12; i++) window.rows.push({name:'',qty:'',unit:'',price:'',note:''});
   render(); calc();
   alignLeftCol();
   alignTanto();
@@ -1875,11 +1875,8 @@ function sw(type, btn) {
   setTimeout(()=>{ alignLeftCol(); alignTanto(); alignFooter(); }, 10);
 }
 
-window.rows = window.rows || [];
-var rows = window.rows;
-
 function render() {
-  g('tbody').innerHTML = rows.map((r,i) => `
+  g('tbody').innerHTML = window.rows.map((r,i) => `
     <tr>
       <td style="position:relative;"><input class="ii" value="${x(r.name)}"
         oninput="rows[${i}].name=this.value" style="width:calc(100% - 52px)">
@@ -1967,6 +1964,8 @@ function amt(r)    {
 </div>
 
 <script>
+window.rows = window.rows || [];
+
 // ── 品目マスタ ──────────────────────────────
 const MASTER_KEY = 'earthwork_item_master';
 let master = [];
@@ -2109,7 +2108,7 @@ function filterSearch() {
 }
 function selectItem(name, unit, price, note) {
   const i = searchTargetRow;
-  if (i < 0 || i >= rows.length) return;
+  if (i < 0 || i >= window.rows.length) return;
   rows[i].name  = name;
   rows[i].unit  = unit;
   rows[i].price = price;
