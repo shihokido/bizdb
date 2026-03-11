@@ -850,6 +850,37 @@ textarea.input{resize:vertical;min-height:70px}
 <div id="page-estimate" class="page">
   <div class="page-header">
     <div><div class="page-title">見積書を作成</div><div class="page-sub">品目を入力するとAIが見積書を自動生成します</div>
+</div>
+  </div>
+  <div class="card">
+    <div class="form-grid">
+      <div>
+        <label class="form-label">貴社名（発行会社）</label>
+        <input class="input" id="estCompany" placeholder="株式会社〇〇">
+      </div>
+      <div>
+        <label class="form-label">取引先名</label>
+        <input class="input" id="estClient" placeholder="〇〇株式会社 御中">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="form-label">品目リスト</label>
+      <div class="est-items-list" id="estItemsList"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addEstItem()">＋ 品目を追加</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <label class="form-label">備考・条件</label>
+      <textarea class="input" id="estMemo" placeholder="支払条件、納期、特記事項など..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="generateEstimate()">✨ プレビューで確認</button>
+      <button class="btn btn-green" onclick="downloadExcel('見積書')">📥 見積書Excel出力</button>
+      <button class="btn btn-ghost" onclick="downloadExcel('請求書')">📥 請求書Excel出力</button>
+    </div>
+    <div id="estStatus" class="status-bar"><div class="spinner"></div><span>生成中...</span></div>
+  </div>
+  <div id="estOutput" style="display:none"></div>
+</div>
 <div id="page-editor" class="page">
   <div class="editor-toolbar">
      <span class="tb-label">書類種別：</span>
@@ -1110,37 +1141,7 @@ textarea.input{resize:vertical;min-height:70px}
     </div>
   </div>
 
-</div></div></div>
-  </div>
-  <div class="card">
-    <div class="form-grid">
-      <div>
-        <label class="form-label">貴社名（発行会社）</label>
-        <input class="input" id="estCompany" placeholder="株式会社〇〇">
-      </div>
-      <div>
-        <label class="form-label">取引先名</label>
-        <input class="input" id="estClient" placeholder="〇〇株式会社 御中">
-      </div>
-    </div>
-    <div style="margin-bottom:14px">
-      <label class="form-label">品目リスト</label>
-      <div class="est-items-list" id="estItemsList"></div>
-      <button class="btn btn-ghost btn-sm" onclick="addEstItem()">＋ 品目を追加</button>
-    </div>
-    <div style="margin-bottom:14px">
-      <label class="form-label">備考・条件</label>
-      <textarea class="input" id="estMemo" placeholder="支払条件、納期、特記事項など..."></textarea>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="generateEstimate()">✨ プレビューで確認</button>
-      <button class="btn btn-green" onclick="downloadExcel('見積書')">📥 見積書Excel出力</button>
-      <button class="btn btn-ghost" onclick="downloadExcel('請求書')">📥 請求書Excel出力</button>
-    </div>
-    <div id="estStatus" class="status-bar"><div class="spinner"></div><span>生成中...</span></div>
-  </div>
-  <div id="estOutput" style="display:none"></div>
-</div>
+</div></div>
 
 </main>
 </div>
