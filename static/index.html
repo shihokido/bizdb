@@ -2171,6 +2171,14 @@ function getCurrentDocType() {
 }
 
 function printDoc() {
+  // 印刷用スタイルを動的に追加
+  let _ps = document.getElementById('_printStyle');
+  if (!_ps) {
+    _ps = document.createElement('style');
+    _ps.id = '_printStyle';
+    _ps.textContent = '@media print { .sidebar, .editor-toolbar { display:none!important; } .main, #page-editor { display:block!important; padding:0!important; background:#fff!important; } .paper-outer { margin:0; box-shadow:none; } .doc { width:100%!important; box-shadow:none; } .del-btn,.add-hint { display:none!important; } .ii,.client-input,.info-tbl input,.ft-ta,.date-input { border:none!important; background:transparent!important; } }';
+    document.head.appendChild(_ps);
+  }
   const docType = getCurrentDocType();
   if (docType === 'invoice') {
     const modal = document.getElementById('printModal');
