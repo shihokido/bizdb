@@ -1299,7 +1299,7 @@ function showEstimate(d, company, client) {
       ${d.memo ? `<div style="margin-top:14px;padding:10px;background:var(--surface2);border-radius:6px;font-size:12px;color:var(--text2)">${d.memo}</div>` : ''}
       <div style="margin-top:14px;text-align:center;display:flex;gap:8px;justify-content:center">
         <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 印刷</button>
-        <button class="btn btn-primary btn-sm" onclick="openInEditor(currentEstData)">📄 書類エディタで開く</button>
+        <button class="btn btn-primary btn-sm" onclick="nav('editor',this)">📄 書類エディタで開く</button>
       </div>
     </div>`;
 }
