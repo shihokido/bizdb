@@ -1206,8 +1206,6 @@ textarea.input{resize:vertical;min-height:70px}
 </div>
 
 <script>
-if (!window.rows) window.rows = [];
-var rows = window.rows;
 // ── STATE ──────────────────────────────────────
 let selectedDocType = 'auto';
 let currentDocId = null;
@@ -1876,6 +1874,9 @@ function sw(type, btn) {
   g('ftText').value           = m.ftv;
   setTimeout(()=>{ alignLeftCol(); alignTanto(); alignFooter(); }, 10);
 }
+
+window.rows = window.rows || [];
+var rows = window.rows;
 
 function render() {
   g('tbody').innerHTML = rows.map((r,i) => `
