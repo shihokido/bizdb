@@ -1876,6 +1876,8 @@ function sw(type, btn) {
 }
 
 function render() {
+  if (!window.rows) window.rows = [];
+  var rows = window.rows;
   g('tbody').innerHTML = rows.map((r,i) => `
     <tr>
       <td style="position:relative;"><input class="ii" value="${x(r.name)}"
@@ -1908,6 +1910,8 @@ function calc() {
 }
 
 function addRow() {
+  if (!window.rows) window.rows = [];
+  var rows = window.rows;
   rows.push({name:'',qty:'',unit:'式',price:'',note:''});
   render(); calc();
   setTimeout(()=>{ const el=document.querySelector('#tbody tr:last-child input'); if(el) el.focus(); },40);
