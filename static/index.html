@@ -930,15 +930,15 @@ let estItems = [];
 
 // ── NAV ───────────────────────────────────────
 function nav(page, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  const target = document.getElementById('page-' + page);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   if (page === 'dashboard') loadDashboard();
   if (page === 'documents') loadDocuments();
   if (page === 'clients') loadClients();
-  if (page === 'estimate' && estItems.length === 0) { estItems = [{  window.scrollTo(0,0);
-}]; renderEstItems(); }
+  if (page === 'market') loadMarket();
 }
 
 // ── FORMAT ────────────────────────────────────
