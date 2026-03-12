@@ -460,14 +460,16 @@ textarea.input{resize:vertical;min-height:70px}
 /* ── 印刷 ── */
 @media print {
   body { background:#fff; }
-  .toolbar { display:none; }
-  .paper-outer { margin:0; box-shadow:none; }
+  .sidebar, .toolbar { display:none!important; }
+  .main { margin-left:0!important; padding:0!important; }
+  .paper-outer { margin:0!important; box-shadow:none; }
   .doc { padding:12mm 15mm 14mm; box-shadow:none; }
   .ii,.client-input,.info-tbl input,.ft-ta,.date-input {
     border:none!important; background:transparent!important;
   }
-  .del-btn,.add-hint { display:none!important; }
-  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; } @page { size:A4 portrait; margin:0; }
+  .del-btn,.add-hint,.srch-btn { display:none!important; }
+  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+  @page { size:A4 portrait; margin:0; }
 }
 
 /* ── SIDEBAR (from index.html) ── */
