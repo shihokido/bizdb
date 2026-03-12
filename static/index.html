@@ -320,12 +320,12 @@ textarea.input{resize:vertical;min-height:70px}
   padding-left:16px;
   display:flex;
   flex-direction:column;
-  align-items:flex-end;   /* __ */
-  justify-content:space-between; position:relative;
+  align-items:flex-end;
+  justify-content:flex-start;
 }
 .tanto-abs {
   width:auto;
-  margin-top:6px;
+  margin-top:auto;
   text-align:right;
   align-self:flex-end;
 }
@@ -1750,7 +1750,7 @@ window.rows = []; var rows = window.rows;
   for (let i=0; i<12; i++) rows.push({name:'',qty:'',unit:'',price:'',note:''});
   render(); calc();
   alignLeftCol();
-  alignTanto();
+  // alignTanto(); // CSS制御に変更
   alignFooter();
   // URLパラメータからデータを読み込む
   const urlParams = new URLSearchParams(window.location.search);
@@ -2300,7 +2300,7 @@ function unlockAllFields() {
     _origNav(page, btn);
     if (page === 'editor') {
       ensureEditorInit();
-      if (typeof alignTanto === "function") { setTimeout(function(){ alignTanto(); alignLeftCol(); }, 50); }
+      // CSS制御に変更のためalignTanto不要
     }
   };
 })();
