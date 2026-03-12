@@ -1228,7 +1228,7 @@ function nav(page, btn) {
 // ── FORMAT ────────────────────────────────────
 var fmt  = n => (n != null && n !== 0) ? '¥' + Number(n).toLocaleString() : '—';
 var dash = v => v || '—';
-
+var fmtK = n => n >= 1e8 ? (n/1e8).toFixed(1)+'億' : n >= 1e4 ? (n/1e4).toFixed(1)+'万' : fmt(n);
 
 // ── UPLOAD ────────────────────────────────────
 const zone = document.getElementById('uploadZone');
