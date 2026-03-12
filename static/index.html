@@ -2300,6 +2300,7 @@ function unlockAllFields() {
     _origNav(page, btn);
     if (page === 'editor') {
       ensureEditorInit();
+      if (typeof alignTanto === "function") { setTimeout(function(){ alignTanto(); alignLeftCol(); }, 50); }
     }
   };
 })();
