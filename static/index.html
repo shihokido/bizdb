@@ -324,10 +324,15 @@ textarea.input{resize:vertical;min-height:70px}
   justify-content:flex-start;
 }
 .tanto-abs {
-  width:auto;
-  margin-top:auto;
-  text-align:right;
-  align-self:flex-end;
+  width:auto !important;
+  margin-top:auto !important;
+  text-align:right !important;
+  align-self:flex-end !important;
+  position:static !important;
+  top:auto !important;
+  left:auto !important;
+  right:auto !important;
+  transform:none !important;
 }
 
 /* ★ 図2: 1.5倍（160px→240px） */
@@ -1788,35 +1793,7 @@ function alignFooter() {
   footer.style.gridTemplateColumns = targetPx + 'px ' + sepW + 'px ' + rightW + 'px';
 }
 
-function alignTanto() {
-  const payRow   = document.getElementById('payMethod');
-  const tantoDiv = document.getElementById('tantoDiv');
-  const rightCol = document.querySelector('.right-col');
-  const itemTbl  = document.querySelector('.item-tbl');
-  if (!payRow || !tantoDiv || !rightCol || !itemTbl) return;
-
-  const payRect  = payRow.closest('tr').getBoundingClientRect();
-  const colRect  = rightCol.getBoundingClientRect();
-  const tblRect  = itemTbl.getBoundingClientRect();
-  const divH     = tantoDiv.getBoundingClientRect().height;
-
-  // 上下: 取引方法行のbottomに合わせる
-  const bottomPx = payRect.bottom - colRect.top;
-  tantoDiv.style.top = (bottomPx - divH) + 'px';
-
-  // 左右: 現在のtantoDiv左端から表の右端まで伸ばす
-  tantoDiv.style.left      = 'auto';
-  tantoDiv.style.transform = 'none';
-  tantoDiv.style.right     = '0';
-  // 幅 = 表右端 - tantoDiv左端(中央揃えのまま計算)
-  const tantoLeft = colRect.left + (colRect.width - 240) / 2;
-  const tantoWidth = tblRect.right - tantoLeft;
-  tantoDiv.style.width = tantoWidth + 'px';
-
-  // ロゴも同じ幅に合わせる
-  const logoImg = document.querySelector('.co-logo img');
-  if (logoImg) logoImg.style.width = tantoWidth + 'px';
-}
+function alignTanto() { /* disabled: CSS制御 */ }
 
 function alignLeftCol() {
   // 「税抜金額」ラベルの左端に left-col の右端を合わせる
