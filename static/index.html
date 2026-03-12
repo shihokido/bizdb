@@ -1226,8 +1226,8 @@ function nav(page, btn) {
 }
 
 // ── FORMAT ────────────────────────────────────
-const fmt  = n => (n != null && n !== 0) ? '¥' + Number(n).toLocaleString() : '—';
-const dash = v => v || '—';
+var fmt  = n => (n != null && n !== 0) ? '¥' + Number(n).toLocaleString() : '—';
+var dash = v => v || '—';
 
 
 // ── UPLOAD ────────────────────────────────────
