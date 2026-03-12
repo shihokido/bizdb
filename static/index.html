@@ -460,7 +460,9 @@ textarea.input{resize:vertical;min-height:70px}
 /* ── 印刷 ── */
 @media print {
   html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
-  .sidebar, .editor-toolbar { display:none !important; }
+  .sidebar, .editor-toolbar,
+  #claude-static-indicator-container, #claude-agent-glow-border,
+  .overlay, #docModal, #masterModal, #searchModal, #printModal { display:none !important; }
   .main { margin:0 !important; padding:0 !important; }
   #page-editor { padding:0 !important; margin:0 !important; }
   .doc { width:210mm !important; min-height:297mm !important; padding:12mm 15mm 14mm !important; margin:0 !important; box-shadow:none !important; box-sizing:border-box !important; }
