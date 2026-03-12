@@ -456,16 +456,14 @@ textarea.input{resize:vertical;min-height:70px}
 /* ── 印刷 ── */
 @media print {
   body { background:#fff; }
-  .sidebar, .editor-toolbar, #page-editor > *:not(.paper-outer) { display:none!important; }
-  .main, #page-editor { display:block!important; padding:0!important; background:#fff!important; }
+  .toolbar { display:none; }
   .paper-outer { margin:0; box-shadow:none; }
-  .doc { padding:12mm 15mm 14mm; box-shadow:none; width:100%!important; }
+  .doc { padding:12mm 15mm 14mm; box-shadow:none; }
   .ii,.client-input,.info-tbl input,.ft-ta,.date-input {
     border:none!important; background:transparent!important;
   }
   .del-btn,.add-hint { display:none!important; }
-  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
-  @page { size:A4 portrait; margin:0; }
+  * { -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; } @page { size:A4 portrait; margin:0; }
 }
 
 /* ── SIDEBAR (from index.html) ── */
@@ -1741,6 +1739,7 @@ loadDashboard();
   
 
 <script>
+'use strict';
 window.rows = []; var rows = window.rows;
 
 (function init() {
@@ -1877,6 +1876,8 @@ function sw(type, btn) {
 }
 
 function render() {
+  if (!window.rows) window.rows = [];
+  var rows = window.rows;
   g('tbody').innerHTML = rows.map((r,i) => `
     <tr>
       <td style="position:relative;"><input class="ii" value="${x(r.name)}"
@@ -1909,6 +1910,8 @@ function calc() {
 }
 
 function addRow() {
+  if (!window.rows) window.rows = [];
+  var rows = window.rows;
   rows.push({name:'',qty:'',unit:'式',price:'',note:''});
   render(); calc();
   setTimeout(()=>{ const el=document.querySelector('#tbody tr:last-child input'); if(el) el.focus(); },40);
@@ -1916,6 +1919,7 @@ function addRow() {
 function del(i) { if(rows.length<=1) return; rows.splice(i,1); render(); calc(); }
 function g(id)     { return document.getElementById(id); }
 function set(id,v) { const e=g(id); if(e) e.textContent=v; }
+function fmt(n)    { return n.toLocaleString('ja-JP'); }
 function yen(n)    { return '¥'+n.toLocaleString('ja-JP'); }
 function x(s)      { return (s||'').replace(/"/g,'&quot;'); }
 function amt(r)    {
@@ -2171,14 +2175,6 @@ function getCurrentDocType() {
 }
 
 function printDoc() {
-  // 印刷用スタイルを動的に追加
-  let _ps = document.getElementById('_printStyle');
-  if (!_ps) {
-    _ps = document.createElement('style');
-    _ps.id = '_printStyle';
-    _ps.textContent = '@media print { .sidebar, .editor-toolbar { display:none!important; } .main, #page-editor { display:block!important; padding:0!important; background:#fff!important; } .paper-outer { margin:0; box-shadow:none; } .doc { width:100%!important; box-shadow:none; } .del-btn,.add-hint { display:none!important; } .ii,.client-input,.info-tbl input,.ft-ta,.date-input { border:none!important; background:transparent!important; } }';
-    document.head.appendChild(_ps);
-  }
   const docType = getCurrentDocType();
   if (docType === 'invoice') {
     const modal = document.getElementById('printModal');
