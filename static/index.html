@@ -459,18 +459,11 @@ textarea.input{resize:vertical;min-height:70px}
 
 /* ── 印刷 ── */
 @media print {
-  html, body { margin:0 !important; padding:0 !important; background:#fff !important; width:210mm !important; }
-  .sidebar, .toolbar, .paper-outer { display:none !important; }
+  html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+  .sidebar, .editor-toolbar { display:none !important; }
   .main { margin:0 !important; padding:0 !important; }
-  .doc {
-    display:block !important;
-    width:210mm !important;
-    min-height:297mm !important;
-    padding:12mm 15mm 14mm !important;
-    margin:0 !important;
-    box-shadow:none !important;
-    box-sizing:border-box !important;
-  }
+  #page-editor { padding:0 !important; margin:0 !important; }
+  .doc { width:210mm !important; min-height:297mm !important; padding:12mm 15mm 14mm !important; margin:0 !important; box-shadow:none !important; box-sizing:border-box !important; }
   .ii, .client-input, .info-tbl input, .ft-ta, .date-input { border:none !important; background:transparent !important; }
   .del-btn, .add-hint, .srch-btn { display:none !important; }
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
