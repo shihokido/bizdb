@@ -1909,7 +1909,7 @@ function calc() {
 }
 
 function addRow() {
-  rows.push({name:'',qty:'',unit:'式',price:'',note:''});
+  rows.push({name:'',qty:'',unit:'',price:'',note:''});
   render(); calc();
   setTimeout(()=>{ const el=document.querySelector('#tbody tr:last-child input'); if(el) el.focus(); },40);
 }
