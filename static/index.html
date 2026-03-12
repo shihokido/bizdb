@@ -460,21 +460,15 @@ textarea.input{resize:vertical;min-height:70px}
 /* ── 印刷 ── */
 @media print {
   html, body { margin:0; padding:0; background:#fff; }
-  body > * { display:none !important; }
-  .doc {
-    display:block !important;
-    position:absolute !important;
-    top:0 !important; left:0 !important;
-    width:210mm !important;
-    padding:12mm 15mm 14mm !important;
-    box-shadow:none !important;
-    margin:0 !important;
-  }
-  .doc * { display:revert !important; visibility:visible !important; }
-  .ii, .client-input, .info-tbl input, .ft-ta, .date-input {
-    border:none !important; background:transparent !important;
-  }
-  .del-btn, .add-hint, .srch-btn { display:none !important; }
+  /* まず全て非表示 */
+  * { visibility:hidden !important; }
+  /* .doc と子要素だけ表示 */
+  .doc { visibility:visible !important; position:fixed !important; top:0 !important; left:0 !important; width:210mm !important; padding:12mm 15mm 14mm !important; box-shadow:none !important; margin:0 !important; background:#fff !important; }
+  .doc * { visibility:visible !important; }
+  /* 入力欄の枠を消す */
+  .ii, .client-input, .info-tbl input, .ft-ta, .date-input { border:none !important; background:transparent !important; }
+  /* 操作ボタンを非表示 */
+  .del-btn, .add-hint, .srch-btn { visibility:hidden !important; }
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
   @page { size:A4 portrait; margin:0; }
 }
